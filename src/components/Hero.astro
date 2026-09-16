@@ -2,48 +2,86 @@
 import { HERO_SLIDES, SITE } from "../data/content";
 import LearnMore from "./LearnMore.astro";
 ---
-<section class="relative isolate overflow-hidden bg-[#0A2A63]" aria-label="Introduction">
+
+<section
+  id="hero-section"
+  class="relative isolate overflow-hidden bg-[#0A2A63]"
+  aria-label="Introduction"
+>
+  <!-- Background slideshow — parallax target -->
   <div class="absolute inset-0 -z-10" id="hero-slides">
-    {HERO_SLIDES.map((slide, i) => (
-      <img
-        src={slide.src}
-        alt={slide.alt}
-        loading={i === 0 ? "eager" : "lazy"}
-        class={`hero-slide absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === 0 ? "opacity-100" : "opacity-0"}`}
-      />
-    ))}
+    {
+      HERO_SLIDES.map((slide, i) => (
+        <img
+          src={slide.src}
+          alt={slide.alt}
+          loading={i === 0 ? "eager" : "lazy"}
+          fetchpriority={i === 0 ? "high" : undefined}
+          class={`hero-slide absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === 0 ? "opacity-100" : "opacity-0"}`}
+        />
+      ))
+    }
     <div class="absolute inset-0 bg-[#0A2A63]/70"></div>
   </div>
-   <div class="mx-auto flex min-h-[78vh] max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 scroll-reveal">
-    <h1 class="font-display max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl">
+
+  <!-- Hero content — entrance-animated by GSAP on load -->
+  <div
+    class="mx-auto flex min-h-[78vh] max-w-7xl flex-col justify-center px-4 py-24 sm:px-6"
+  >
+    <h1
+      id="hero-headline"
+      class="font-display max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
+    >
       {SITE.heroHeading}
     </h1>
-    <div class="mt-8">
+    <div id="hero-cta" class="mt-8">
       <LearnMore href="/about" dark />
     </div>
   </div>
-  <div class="absolute bottom-6 right-4 flex gap-2 sm:right-6" role="tablist" aria-label="Slideshow">
-    {HERO_SLIDES.map((_, i) => (
-      <button class="hero-dot h-1.5 w-8 bg-white/40" data-index={i} aria-label={`Go to slide ${i + 1}`}></button>
-    ))}
+
+  <!-- Slide dots -->
+  <div
+    class="absolute bottom-6 right-4 flex gap-2 sm:right-6"
+    role="tablist"
+    aria-label="Slideshow"
+  >
+    {
+      HERO_SLIDES.map((_, i) => (
+        <button
+          class="hero-dot h-1.5 w-8 bg-white/40"
+          data-index={i}
+          aria-label={`Go to slide ${i + 1}`}
+        />
+      ))
+    }
   </div>
 </section>
+
 <script>
-  const slides = Array.from(document.querySelectorAll('.hero-slide'));
-  const dots = Array.from(document.querySelectorAll('.hero-dot'));
+  const slides = Array.from(document.querySelectorAll(".hero-slide"));
+  const dots = Array.from(document.querySelectorAll(".hero-dot"));
   let current = 0;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function show(n) {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function show(n: number) {
     current = (n + slides.length) % slides.length;
     slides.forEach((s, i) => {
-      s.classList.toggle('opacity-100', i === current);
-      s.classList.toggle('opacity-0', i !== current);
+      s.classList.toggle("opacity-100", i === current);
+      s.classList.toggle("opacity-0", i !== current);
     });
     dots.forEach((d, i) => {
-      d.classList.toggle('bg-white', i === current);
-      d.classList.toggle('bg-white/40', i !== current);
+      d.classList.toggle("bg-white", i === current);
+      d.classList.toggle("bg-white/40", i !== current);
     });
   }
-  dots.forEach((d) => d.addEventListener('click', () => show(Number(d.dataset.index))));
-  if (!reduce && slides.length > 1) setInterval(() => show(current + 1), 6000);
+
+  dots.forEach((d) =>
+    d.addEventListener("click", () =>
+      show(Number((d as HTMLElement).dataset.index))
+    )
+  );
+
+  if (!reduce && slides.length > 1) {
+    setInterval(() => show(current + 1), 6000);
+  }
 </script>

@@ -33,45 +33,48 @@ body {
   font-family: var(--font-display);
 }
 
-/* Square corners site-wide: buttons, cards, images */
+/* Square corners site-wide */
 *,
 *::before,
 *::after {
   border-radius: 0 !important;
 }
 
-/* Scroll reveal */
-.scroll-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
-}
-.scroll-reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+/* ── Scroll reveal ────────────────────────────────────────────────────────────
+   GSAP owns the animation; these classes are semantic markers only.
+   The reduced-motion block ensures content is always visible without JS.       */
+.scroll-reveal,
+.stagger-grid > * {
+  /* intentionally empty — GSAP sets opacity/transform at runtime */
 }
 
-/* Card hover expand */
+@media (prefers-reduced-motion: reduce) {
+  /* Hard-show everything if GSAP is skipped for reduced-motion users */
+  .scroll-reveal,
+  .stagger-grid > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Card hover ───────────────────────────────────────────────────────────────
+   Only activate scale/shadow on devices that truly support hover (pointer: fine
+   = mouse/trackpad). Touch screens never get sticky hover states this way.      */
 .card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background: transparent;
 }
-.card-hover:hover {
-  transform: scale(1.03);
-  box-shadow: 0 12px 32px rgba(15, 61, 142, 0.12);
+
+@media (hover: hover) and (pointer: fine) {
+  .card-hover:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 32px rgba(15, 61, 142, 0.12);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
   .card-hover {
     transition: none;
-  }
-  .card-hover:hover {
-    transform: none;
-    box-shadow: none;
   }
 }

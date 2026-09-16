@@ -2,30 +2,56 @@
 import { getPeople } from "../lib/sanity";
 const people = await getPeople();
 ---
+
 <section class="bg-[#F4F6FA]" aria-labelledby="people-heading">
- <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20 scroll-reveal">
-     <h2 id="people-heading" class="font-display text-3xl font-semibold text-[#16233A]">Our People</h2>
-     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-       {people.map((p) => (
-         <a href={`/people/${p.slug}`} class="group block">
-           <div class="card-hover overflow-hidden">
-             <img src={p.image} alt={p.name} loading="lazy" class="h-72 w-full object-cover" />
-           </div>
-           <div class="pt-4 text-left">
-            <p class="text-sm font-semibold text-[#16233A]">{p.name}</p>
-            <p class="text-xs text-slate-500">{p.title}</p>
-          </div>
-        </a>
-      ))}
-     </div>
-     <div class="mt-8 flex justify-end">
-       <a href="/people" class="inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E] hover:text-[#0A2A63] transition-colors">
-         <span>Learn more</span>
-         <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
-           <path d="M7 17 17 7" />
-           <path d="M8 7h9v9" />
-         </svg>
-       </a>
-     </div>
-   </div>
- </section>
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <h2
+      id="people-heading"
+      class="scroll-reveal font-display text-3xl font-semibold text-[#16233A]"
+    >
+      Our People
+    </h2>
+
+    <!-- stagger-grid: GSAP cascades each person card in sequentially -->
+    <div class="stagger-grid mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        people.map((p) => (
+          <a href={`/people/${p.slug}`} class="group block">
+            <div class="card-hover overflow-hidden">
+              <img
+                src={p.image}
+                alt={p.name}
+                loading="lazy"
+                class="h-72 w-full object-cover"
+              />
+            </div>
+            <div class="pt-4 text-left">
+              <p class="text-sm font-semibold text-[#16233A]">{p.name}</p>
+              <p class="text-xs text-slate-500">{p.title}</p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="mt-8 flex justify-end">
+      <a
+        href="/people"
+        class="inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E] transition-colors hover:text-[#0A2A63]"
+      >
+        <span>Learn more</span>
+        <svg
+          viewBox="0 0 24 24"
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="square"
+        >
+          <path d="M7 17 17 7" />
+          <path d="M8 7h9v9" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

@@ -7,45 +7,195 @@ import WhatsAppButton from "../components/WhatsAppButton.astro";
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 const {
-  title = "SBA Legal Consult | A full-service law firm serving individuals and businesses across Ghana",
-  description = "A full-service law firm serving individuals and businesses across Ghana.",
+  title = "SBA Legal Consult | Full-Service Law Firm in Kumasi, Ghana",
+  description = "A full-service law firm serving individuals and businesses across Ghana. Corporate law, oil & gas, property, immigration, and more — based in Kumasi, Ashanti.",
+  ogImage = "/og-default.jpg",
 } = Astro.props;
+
+const canonicalURL = Astro.url;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LegalService",
+  name: "SBA Legal Consult",
+  description:
+    "A full-service law firm serving individuals and businesses across Ghana, specialising in corporate and commercial law, oil and gas, mining, property law, immigration, and more.",
+  url: "https://sbalegalconsult.com",
+  telephone: ["+233543557244", "+233322291474"],
+  address: {
+    "@type": "PostalAddress",
+    streetAddress:
+      "2nd Floor, JP Station Building, Off J.K. Acheampong Ave, Ahinsan Estate",
+    addressLocality: "Kumasi",
+    addressRegion: "Ashanti",
+    addressCountry: "GH",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 6.6885,
+    longitude: -1.6244,
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "Ghana",
+  },
+  knowsAbout: [
+    "Corporate and Commercial Law",
+    "Oil and Gas Law",
+    "Mining Law",
+    "Insolvency and Restructuring",
+    "Foreign Direct Investment",
+    "Property Law",
+    "Medical Law",
+    "Immigration and Nationality",
+  ],
+  foundingDate: "2025",
+  priceRange: "$$",
+};
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Primary SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="SBA Legal Consult" />
+    <meta property="og:locale" content="en_GH" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Fonts — preconnect first, then non-blocking stylesheet load -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+    />
+    <link
       href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
   </head>
   <body class="bg-white text-slate-700">
     <Navbar />
     <main><slot /></main>
     <Footer />
     <WhatsAppButton />
+
     <script>
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add('visible');
-              observer.unobserve(e.target);
-            }
+      import gsap from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Bail early — CSS already exposes everything for reduced-motion users
+      const noMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      if (!noMotion) {
+        // ── Hero entrance (homepage only) ────────────────────────────────────
+        const heroHeadline = document.getElementById("hero-headline");
+        const heroCta = document.getElementById("hero-cta");
+        const heroSlides = document.getElementById("hero-slides");
+        const heroSection = document.getElementById("hero-section");
+
+        if (heroHeadline) {
+          gsap
+            .timeline({ delay: 0.2 })
+            .from(heroHeadline, {
+              opacity: 0,
+              y: 60,
+              duration: 1.1,
+              ease: "power3.out",
+            })
+            .from(
+              heroCta,
+              { opacity: 0, y: 24, duration: 0.8, ease: "power2.out" },
+              "-=0.55"
+            );
+        }
+
+        // ── Hero background parallax ─────────────────────────────────────────
+        if (heroSlides && heroSection) {
+          gsap.to(heroSlides, {
+            yPercent: 28,
+            ease: "none",
+            scrollTrigger: {
+              trigger: heroSection,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.8,
+            },
           });
-        },
-        { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
-      );
-      document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+        }
+
+        // ── Generic scroll reveals (.scroll-reveal) ──────────────────────────
+        // Each element gets its own ScrollTrigger so they fire independently
+        gsap.utils.toArray<HTMLElement>(".scroll-reveal").forEach((el) => {
+          gsap.from(el, {
+            opacity: 0,
+            y: 48,
+            duration: 0.9,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              toggleActions: "play none none none",
+            },
+          });
+        });
+
+        // ── Staggered grid children (.stagger-grid) ──────────────────────────
+        // Children cascade in one-by-one for a premium editorial feel
+        gsap.utils.toArray<HTMLElement>(".stagger-grid").forEach((grid) => {
+          const items = Array.from(grid.children) as HTMLElement[];
+          if (!items.length) return;
+          gsap.from(items, {
+            opacity: 0,
+            y: 44,
+            duration: 0.75,
+            stagger: 0.13,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: grid,
+              start: "top 84%",
+              toggleActions: "play none none none",
+            },
+          });
+        });
+      }
     </script>
   </body>
 </html>

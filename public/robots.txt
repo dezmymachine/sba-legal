@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sbalegalconsult.com/sitemap-index.xml

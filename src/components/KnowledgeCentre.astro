@@ -3,20 +3,34 @@ import { getArticles } from "../lib/sanity";
 import LearnMore from "./LearnMore.astro";
 const articles = await getArticles();
 ---
+
 <section class="bg-white" aria-labelledby="knowledge-heading">
-  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_2fr] lg:py-20 scroll-reveal">
+  <div
+    class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_2fr] lg:py-24"
+  >
     <div>
-      <h2 id="knowledge-heading" class="font-display text-3xl font-semibold text-[#16233A]">Knowledge Centre</h2>
+      <h2
+        id="knowledge-heading"
+        class="scroll-reveal font-display text-3xl font-semibold text-[#16233A]"
+      >
+        Knowledge Centre
+      </h2>
     </div>
+
     <div>
-      <ul class="divide-y divide-[#D9E1F0] border-y border-[#D9E1F0]">
-        {articles.map((a) => (
-          <li>
-            <a href={`/knowledge/${a.slug}`} class="group block py-4">
-              <span class="text-[15px] font-medium text-[#16233A] group-hover:text-[#0F3D8E]">{a.title}</span>
-            </a>
-          </li>
-        ))}
+      <!-- stagger-grid: each article row cascades in -->
+      <ul class="stagger-grid divide-y divide-[#D9E1F0] border-y border-[#D9E1F0]">
+        {
+          articles.map((a) => (
+            <li>
+              <a href={`/knowledge/${a.slug}`} class="group block py-4">
+                <span class="text-[15px] font-medium text-[#16233A] group-hover:text-[#0F3D8E]">
+                  {a.title}
+                </span>
+              </a>
+            </li>
+          ))
+        }
       </ul>
       <div class="mt-6 flex justify-end">
         <LearnMore href="/knowledge" />
