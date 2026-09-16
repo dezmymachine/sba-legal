@@ -1,0 +1,26 @@
+---
+import LearnMore from "./LearnMore.astro";
+---
+<section class="bg-white" aria-labelledby="about-heading">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-20">
+    <div>
+      <h2 id="about-heading" class="font-display text-3xl font-semibold text-[#16233A]">About Us</h2>
+      <p class="mt-4 text-base leading-relaxed">
+        SBA Legal Consult is a Kumasi-based full-service firm founded in 2025 to give
+        individuals and businesses clear, practical legal support. We work with
+        integrity, pursue excellence, and put the client first.
+      </p>
+      <div class="mt-6">
+        <LearnMore href="/about" />
+      </div>
+    </div>
+    <div>
+      <img
+        src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop"
+        alt="SBA office placeholder"
+        loading="lazy"
+        class="h-64 w-full object-cover lg:h-full"
+      />
+    </div>
+  </div>
+</section>

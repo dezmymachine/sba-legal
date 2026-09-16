@@ -1,0 +1,14 @@
+---
+import { SITE } from "../data/content";
+// Uses phone1 as WhatsApp fallback until a dedicated number is confirmed.
+const wa = `https://wa.me/233${SITE.phone1.substring(1)}?text=${encodeURIComponent("Hello SBA Legal Consult, I would like to enquire.")}`;
+---
+<a
+  href={wa}
+  target="_blank"
+  rel="noopener"
+  aria-label="Chat on WhatsApp"
+  class="fixed bottom-5 right-5 z-50 grid h-12 w-12 place-items-center bg-[#0F3D8E] text-white shadow-lg hover:bg-[#0A2A63]"
+>
+  <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.4-.5 0-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.5c-.2.2-.3.4-.1.7.2.3.9 1.5 2 2.4 1.4 1.2 2.5 1.6 2.8 1.8.3.2.5.1.7-.1l.8-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.4 0 .1 0 .7-.5 1.5Z"/></svg>
+</a>

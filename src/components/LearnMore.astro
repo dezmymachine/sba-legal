@@ -1,0 +1,26 @@
+---
+interface Props {
+  href: string;
+  label?: string;
+  dark?: boolean;
+}
+const { href, label = "Learn more", dark = false } = Astro.props;
+---
+<a
+  href={href}
+  class={`group inline-flex items-center gap-1 text-sm font-semibold transition-colors ${
+    dark ? "text-white hover:text-white/80" : "text-[#0F3D8E] hover:text-[#0A2A63]"
+  }`}
+  aria-label={label}
+>
+  <span>{label}</span>
+  <span
+    class={dark ? "text-white" : "text-[#0F3D8E] group-hover:text-[#0A2A63]"}
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+      <path d="M7 17 17 7" />
+      <path d="M8 7h9v9" />
+    </svg>
+  </span>
+</a>
