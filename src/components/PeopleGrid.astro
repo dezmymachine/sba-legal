@@ -3,13 +3,15 @@ import { getPeople } from "../lib/sanity";
 const people = await getPeople();
 ---
 <section class="bg-[#F4F6FA]" aria-labelledby="people-heading">
-  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-    <h2 id="people-heading" class="font-display text-3xl font-semibold text-[#16233A]">Our People</h2>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {people.map((p) => (
-        <a href={`/people/${p.slug}`} class="group block">
-          <img src={p.image} alt={p.name} loading="lazy" class="h-72 w-full object-cover" />
-          <div class="pt-4 text-left">
+ <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20 scroll-reveal">
+     <h2 id="people-heading" class="font-display text-3xl font-semibold text-[#16233A]">Our People</h2>
+     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+       {people.map((p) => (
+         <a href={`/people/${p.slug}`} class="group block">
+           <div class="card-hover overflow-hidden">
+             <img src={p.image} alt={p.name} loading="lazy" class="h-72 w-full object-cover" />
+           </div>
+           <div class="pt-4 text-left">
             <p class="text-sm font-semibold text-[#16233A]">{p.name}</p>
             <p class="text-xs text-slate-500">{p.title}</p>
           </div>

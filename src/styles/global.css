@@ -39,3 +39,39 @@ body {
 *::after {
   border-radius: 0 !important;
 }
+
+/* Scroll reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover expand */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: transparent;
+}
+.card-hover:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 32px rgba(15, 61, 142, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .card-hover {
+    transition: none;
+  }
+  .card-hover:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

@@ -3,13 +3,15 @@ import { PRACTICES } from "../data/content";
 import LearnMore from "./LearnMore.astro";
 ---
 <section class="bg-[#F4F6FA]" aria-labelledby="practice-heading">
-  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-    <h2 id="practice-heading" class="font-display text-3xl font-semibold text-[#16233A]">Practice Areas</h2>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {PRACTICES.map((p) => (
-        <a href={`/expertise/${p.slug}`} class="group block">
-          <img src={p.image} alt={p.alt} loading="lazy" class="h-56 w-full object-cover" />
-          <h3 class="pt-4 text-left text-[15px] font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">{p.title}</h3>
+ <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20 scroll-reveal">
+     <h2 id="practice-heading" class="font-display text-3xl font-semibold text-[#16233A]">Practice Areas</h2>
+     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+       {PRACTICES.map((p) => (
+<a href={`/expertise/${p.slug}`} class="group block">
+           <div class="card-hover overflow-hidden">
+             <img src={p.image} alt={p.alt} loading="lazy" class="h-56 w-full object-cover" />
+           </div>
+           <h3 class="pt-4 text-left text-[15px] font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">{p.title}</h3>
         </a>
       ))}
     </div>
