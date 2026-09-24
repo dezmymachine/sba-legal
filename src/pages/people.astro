@@ -1,10 +1,84 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { getPeople } from "../lib/sanity";
+import { PAGE_HERO_IMAGES } from "../data/content";
+
+const people = await getPeople();
+
+const heroImages = PAGE_HERO_IMAGES;
 ---
-<BaseLayout title="People | SBA Legal Consult">
-  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-    <h1 class="font-display text-4xl font-semibold text-[#16233A]">People</h1>
-    <p class="mt-4 max-w-xl text-slate-600">Full content coming soon. This stub route exists so the homepage nav never 404s.</p>
-    <a href="/" class="mt-6 inline-block text-sm font-semibold text-[#0F3D8E] underline underline-offset-4">Back home</a>
+<BaseLayout
+  title="Our People | SBA Legal Consult"
+  description="Meet the lawyers of SBA Legal Consult in Kumasi — a senior-led team advising across disputes, transactions, energy, property, and regulatory work."
+>
+  <PageHero
+    title="Our People"
+    images={heroImages}
+  />
+
+  <section class="bg-white" aria-labelledby="team-intro-heading">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+      <h2 id="team-intro-heading" class="sr-only">About our team</h2>
+      <div class="scroll-reveal max-w-3xl">
+        <p class="text-lg leading-relaxed text-[#16233A]">
+          From complex disputes to high-value transactions, clients turn to SBA
+          Legal Consult for lawyers who combine courtroom strength with
+          commercial judgement.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          Our practitioners advise individuals, businesses, and institutions
+          across commercial litigation, corporate and transactional matters,
+          energy and natural resources, property, and regulatory work — with a
+          client-first approach grounded in integrity and excellence. Every
+          mandate is led at a senior level, so clients always know who is
+          responsible for their matter.
+        </p>
+      </div>
+
+      <!-- stagger-grid: GSAP cascades each person card in sequentially -->
+      <div class="stagger-grid mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          people.map((p) => (
+            <a href={`/people/${p.slug}`} class="group block" aria-label={`View profile of ${p.name}`}>
+              <div class="card-hover overflow-hidden">
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  loading="lazy"
+                  class="aspect-[3/4] w-full object-cover"
+                />
+              </div>
+              <div class="pt-4 text-left">
+                <p class="text-base font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">
+                  {p.name}
+                </p>
+                <p class="mt-0.5 text-sm text-slate-500">{p.title}</p>
+                {p.excerpt && (
+                  <p class="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600">
+                    {p.excerpt}
+                  </p>
+                )}
+                <p class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E]">
+                  <span>Read more</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="square"
+                    aria-hidden="true"
+                  >
+                    <path d="M7 17 17 7" />
+                    <path d="M8 7h9v9" />
+                  </svg>
+                </p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
   </section>
 </BaseLayout>

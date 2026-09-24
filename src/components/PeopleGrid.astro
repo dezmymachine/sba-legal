@@ -11,23 +11,44 @@ const people = await getPeople();
     >
       Our People
     </h2>
+    <p class="scroll-reveal mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
+      Led by our Managing Partner, our lawyers combine courtroom experience,
+      transactional skill, and academic depth.
+    </p>
 
     <!-- stagger-grid: GSAP cascades each person card in sequentially -->
-    <div class="stagger-grid mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="stagger-grid mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       {
         people.map((p) => (
-          <a href={`/people/${p.slug}`} class="group block">
+          <a href={`/people/${p.slug}`} class="group block" aria-label={`View profile of ${p.name}`}>
             <div class="card-hover overflow-hidden">
               <img
                 src={p.image}
                 alt={p.name}
                 loading="lazy"
-                class="h-72 w-full object-cover"
+                class="aspect-[3/4] w-full object-cover"
               />
             </div>
             <div class="pt-4 text-left">
-              <p class="text-sm font-semibold text-[#16233A]">{p.name}</p>
-              <p class="text-xs text-slate-500">{p.title}</p>
+              <p class="text-sm font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">
+                {p.name}
+              </p>
+              <p class="mt-0.5 text-xs text-slate-500">{p.title}</p>
+              <p class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[#0F3D8E]">
+                <span>View profile</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  class="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="square"
+                  aria-hidden="true"
+                >
+                  <path d="M7 17 17 7" />
+                  <path d="M8 7h9v9" />
+                </svg>
+              </p>
             </div>
           </a>
         ))
@@ -39,7 +60,7 @@ const people = await getPeople();
         href="/people"
         class="inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E] transition-colors hover:text-[#0A2A63]"
       >
-        <span>Learn more</span>
+        <span>Meet the team</span>
         <svg
           viewBox="0 0 24 24"
           class="h-4 w-4"

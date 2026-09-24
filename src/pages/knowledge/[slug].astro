@@ -1,0 +1,197 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleBody from "../../components/ArticleBody.astro";
+import {
+  getAllArticleSlugs,
+  getArticle,
+  getArticlesByKind,
+  getArticles,
+  formatDate,
+  KIND_LABELS,
+} from "../../lib/sanity";
+
+// Static detail pages backed by local content today, Sanity tomorrow:
+// slugs come from Sanity when credentials are set, mocks otherwise.
+export async function getStaticPaths() {
+  const slugs = await getAllArticleSlugs();
+  return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const article = await getArticle(slug);
+
+if (!article) {
+  return Astro.redirect("/knowledge");
+}
+
+const label = KIND_LABELS[article.kind].singular;
+
+// Recommended: same kind first, then the rest — never the current item.
+const sameKind = (await getArticlesByKind(article.kind)).filter((a) => a.slug !== article.slug);
+const latest = (await getArticles()).filter(
+  (a) => a.slug !== article.slug && !sameKind.some((s) => s.slug === a.slug)
+);
+const recommended = [...sameKind, ...latest].slice(0, 3);
+---
+<BaseLayout
+  title={`${article.title} | SBA Legal Consult`}
+  description={article.excerpt ?? article.title}
+  ogImage={article.heroImage ?? "/og-default.jpg"}
+>
+  {/* Detail hero: article art with dark veil, kind eyebrow + white title */}
+  <section aria-label={article.title} class="relative isolate overflow-hidden bg-[#0A2A63]">
+    {article.heroImage && (
+      <div class="absolute inset-0 -z-10">
+        <img
+          src={article.heroImage}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+        <div class="absolute inset-0 bg-[#0A2A63]/55"></div>
+      </div>
+    )}
+    <div class="mx-auto flex min-h-[52vh] max-w-7xl flex-col justify-center px-4 py-20 sm:px-6">
+      <p class="text-sm font-medium text-white/85">{label}</p>
+      <h1 class="font-display mt-3 max-w-3xl text-3xl font-medium leading-tight text-white sm:text-4xl lg:text-[2.75rem]">
+        {article.title}
+      </h1>
+      <p class="mt-4 text-sm text-white/75">{formatDate(article.date)}</p>
+    </div>
+  </section>
+
+  <section class="bg-white" aria-label="Article content">
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16">
+      {/* Share / print row */}
+      <div class="flex items-center gap-3" data-share-row>
+        <button
+          type="button"
+          data-share
+          aria-label="Share this article"
+          class="grid h-10 w-10 place-items-center rounded-full border border-[#16233A] text-[#16233A] transition-colors hover:bg-[#16233A] hover:text-white"
+        >
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <path d="m8.6 10.6 6.8-4M8.6 13.4l6.8 4" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          data-print
+          aria-label="Print this article"
+          class="grid h-10 w-10 place-items-center rounded-full border border-[#16233A] text-[#16233A] transition-colors hover:bg-[#16233A] hover:text-white"
+        >
+          <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9V3h12v6" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+            <rect x="6" y="14" width="12" height="7" />
+          </svg>
+        </button>
+        <span data-share-note class="hidden text-xs text-slate-500" role="status">Link copied</span>
+      </div>
+
+      <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_240px]">
+        <div>
+          <ArticleBody body={article.body} />
+          <a
+            href="/knowledge"
+            class="mt-10 inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E] hover:text-[#0A2A63]"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              class="h-4 w-4 rotate-180"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <path d="M7 17 17 7" />
+              <path d="M8 7h9v9" />
+            </svg>
+            <span>Back to Knowledge Centre</span>
+          </a>
+        </div>
+
+        {/* Author sidebar — rendered only when an author is set (optional for events) */}
+        {article.author && (
+          <aside aria-label={`Author: ${article.author.name}`}>
+            <h2 class="font-display text-center text-xl font-medium text-[#16233A]">Author</h2>
+            <a href={`/people/${article.author.slug}`} class="group mt-4 block">
+              <div class="overflow-hidden">
+                <img
+                  src={article.author.image}
+                  alt={`Portrait of ${article.author.name}`}
+                  loading="lazy"
+                  class="mx-auto aspect-[3/4] w-36 object-cover sm:w-40"
+                />
+              </div>
+              <p class="mt-3 text-center text-sm font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">
+                {article.author.name}
+              </p>
+              <p class="text-center text-sm text-slate-600">{article.author.title}</p>
+            </a>
+          </aside>
+        )}
+      </div>
+
+      {/* Recommended content */}
+      {recommended.length > 0 && (
+        <div class="mt-16">
+          <h2 class="font-display text-2xl font-medium text-[#16233A]">Recommended Content</h2>
+          <div class="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {recommended.map((r) => (
+              <a href={`/knowledge/${r.slug}`} class="group block" aria-label={`Read: ${r.title}`}>
+                {r.heroImage && (
+                  <div class="card-hover overflow-hidden">
+                    <img
+                      src={r.heroImage}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      class="aspect-[16/10] w-full object-cover"
+                    />
+                  </div>
+                )}
+                <p class="mt-3 text-[15px] font-medium leading-snug text-[#16233A] group-hover:text-[#0F3D8E]">
+                  {r.title}
+                </p>
+                <p class="mt-2 text-sm text-slate-500">{formatDate(r.date)}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const shareBtn = document.querySelector("[data-share]");
+  const printBtn = document.querySelector("[data-print]");
+  const note = document.querySelector("[data-share-note]");
+
+  shareBtn?.addEventListener("click", async () => {
+    const data = { title: document.title, url: location.href };
+    if (navigator.share) {
+      try {
+        await navigator.share(data);
+        return;
+      } catch {
+        return; // user dismissed — stay silent
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(location.href);
+      note?.classList.remove("hidden");
+      setTimeout(() => note?.classList.add("hidden"), 2500);
+    } catch {
+      // clipboard unavailable — no-op
+    }
+  });
+
+  printBtn?.addEventListener("click", () => window.print());
+</script>

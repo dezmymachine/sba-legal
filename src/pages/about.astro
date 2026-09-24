@@ -1,10 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
 ---
-<BaseLayout title="About | SBA Legal Consult">
-  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-    <h1 class="font-display text-4xl font-semibold text-[#16233A]">About</h1>
-    <p class="mt-4 max-w-xl text-slate-600">Full content coming soon. This stub route exists so the homepage nav never 404s.</p>
-    <a href="/" class="mt-6 inline-block text-sm font-semibold text-[#0F3D8E] underline underline-offset-4">Back home</a>
-  </section>
+<BaseLayout
+  title="About Us | SBA Legal Consult"
+  description="SBA Legal Consult is a Kumasi-based full-service law firm serving individuals and businesses across Ghana with integrity, excellence, and a client-first approach."
+>
+  <PageHero
+    title="About Us"
+    images={["/backgrounds/99671.jpg"]}
+  />
 </BaseLayout>

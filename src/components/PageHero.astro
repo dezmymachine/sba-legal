@@ -1,0 +1,67 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  eyebrow?: string;
+  images?: string[];
+}
+
+const {
+  title,
+  subtitle,
+  eyebrow,
+  images = [],
+} = Astro.props;
+---
+
+<section aria-label={title} class="relative isolate overflow-hidden bg-[#EDEFF3]">
+  {images.length > 0 && (
+    <div class="absolute inset-0 -z-10" data-pagehero-slides>
+      {images.map((src, i) => (
+        <img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          loading={i === 0 ? "eager" : "lazy"}
+          class={`pagehero-slide absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${i === 0 ? "opacity-100" : "opacity-0"}`}
+        />
+      ))}
+      {/* Light veil so dark-navy text reads over any background art */}
+      <div class="absolute inset-0 bg-white/70"></div>
+    </div>
+  )}
+
+  <div class="mx-auto flex min-h-[44vh] max-w-7xl flex-col justify-center px-4 py-20 sm:px-6">
+    {eyebrow && (
+      <p class="scroll-reveal text-xs font-semibold uppercase tracking-[0.2em] text-[#0F3D8E]">
+        {eyebrow}
+      </p>
+    )}
+    <h1 class="font-display mt-3 max-w-3xl text-4xl font-medium leading-tight text-[#16233A] sm:text-5xl">
+      {title}
+    </h1>
+    {subtitle && (
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-600">
+        {subtitle}
+      </p>
+    )}
+  </div>
+</section>
+
+<script>
+  // Rotate PageHero backgrounds with a soft crossfade.
+  // Respects reduced-motion: first image stays static.
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("[data-pagehero-slides]").forEach((root) => {
+    const slides = Array.from(root.querySelectorAll(".pagehero-slide"));
+    if (reduce || slides.length < 2) return;
+    let current = 0;
+    setInterval(() => {
+      current = (current + 1) % slides.length;
+      slides.forEach((s, i) => {
+        s.classList.toggle("opacity-100", i === current);
+        s.classList.toggle("opacity-0", i !== current);
+      });
+    }, 7000);
+  });
+</script>

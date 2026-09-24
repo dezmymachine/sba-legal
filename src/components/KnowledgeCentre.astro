@@ -1,5 +1,5 @@
 ---
-import { getArticles } from "../lib/sanity";
+import { getArticles, formatDate, KIND_LABELS } from "../lib/sanity";
 import LearnMore from "./LearnMore.astro";
 const articles = await getArticles();
 ---
@@ -24,7 +24,12 @@ const articles = await getArticles();
           articles.map((a) => (
             <li>
               <a href={`/knowledge/${a.slug}`} class="group block py-4">
-                <span class="text-[15px] font-medium text-[#16233A] group-hover:text-[#0F3D8E]">
+                <p class="text-xs">
+                  <span class="font-semibold text-[#16233A]">{KIND_LABELS[a.kind].singular}</span>
+                  <span class="mx-2 text-slate-300" aria-hidden="true">|</span>
+                  <span class="text-slate-500">{formatDate(a.date)}</span>
+                </p>
+                <span class="mt-1 block text-[15px] font-medium text-[#16233A] group-hover:text-[#0F3D8E]">
                   {a.title}
                 </span>
               </a>

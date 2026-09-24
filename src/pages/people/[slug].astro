@@ -1,0 +1,137 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { PEOPLE } from "../../data/content";
+
+// Static detail pages backed by local content.
+// When Sanity is connected, extend this with a single-person fetch.
+export async function getStaticPaths() {
+  return PEOPLE.map((p) => ({
+    params: { slug: p.slug },
+    props: { person: p },
+  }));
+}
+
+const { person } = Astro.props;
+const others = PEOPLE.filter((p) => p.slug !== person.slug);
+
+// Single shared art for every bio hero.
+const heroImage = "/backgrounds/62.jpg";
+---
+<BaseLayout
+  title={`${person.name} — ${person.title} | SBA Legal Consult`}
+  description={person.excerpt ?? `${person.name}, ${person.title} at SBA Legal Consult in Kumasi, Ghana.`}
+>
+  {/* Bio hero: background art with designation + name left, portrait right */}
+  <section aria-label={`${person.name}, ${person.title}`} class="relative isolate overflow-hidden bg-[#EDEFF3]">
+    <div class="absolute inset-0 -z-10">
+      <img
+        src={heroImage}
+        alt=""
+        aria-hidden="true"
+        loading="eager"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 bg-white/70"></div>
+    </div>
+
+    <div class="mx-auto grid max-w-7xl items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:py-20">
+      <div>
+        <a
+          href="/people"
+          class="inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E] hover:text-[#0A2A63]"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            class="h-4 w-4 rotate-180"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="square"
+            aria-hidden="true"
+          >
+            <path d="M7 17 17 7" />
+            <path d="M8 7h9v9" />
+          </svg>
+          <span>Our People</span>
+        </a>
+        <p class="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#0F3D8E]">
+          {person.title}
+        </p>
+        <h1 class="font-display mt-3 max-w-2xl text-4xl font-medium leading-tight text-[#16233A] sm:text-5xl">
+          {person.name}
+        </h1>
+        {person.excerpt && (
+          <p class="mt-4 max-w-xl text-base leading-relaxed text-slate-600">
+            {person.excerpt}
+          </p>
+        )}
+      </div>
+
+      <div class="justify-self-start lg:justify-self-end">
+        <img
+          src={person.image}
+          alt={`Portrait of ${person.name}`}
+          loading="eager"
+          class="aspect-[3/4] w-72 object-cover shadow-xl sm:w-80"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white" aria-label={`Profile of ${person.name}`}>
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <div>
+          <div class="space-y-5">
+            {person.bio?.map((para: string) => (
+              <p class="text-base leading-relaxed text-slate-600">{para}</p>
+            ))}
+          </div>
+        </div>
+
+        <aside>
+          {person.focus && person.focus.length > 0 && (
+            <div class="border border-[#D9E1F0] bg-[#F4F6FA] p-6">
+              <h2 class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">
+                Focus areas
+              </h2>
+              <ul class="mt-3 flex flex-wrap gap-2">
+                {person.focus.map((f: string) => (
+                  <li class="border border-[#D9E1F0] bg-white px-3 py-1.5 text-xs font-medium text-[#16233A]">
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </aside>
+      </div>
+
+      <div class="mt-16 border-t border-[#D9E1F0] pt-10">
+        <h2 class="font-display text-2xl font-semibold text-[#16233A]">
+          More of our team
+        </h2>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {others.map((p) => (
+            <a href={`/people/${p.slug}`} class="group block" aria-label={`View profile of ${p.name}`}>
+              <div class="card-hover overflow-hidden">
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  loading="lazy"
+                  class="aspect-[3/4] w-full object-cover"
+                />
+              </div>
+              <div class="pt-3 text-left">
+                <p class="text-sm font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">
+                  {p.name}
+                </p>
+                <p class="text-xs text-slate-500">{p.title}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

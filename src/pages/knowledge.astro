@@ -1,10 +1,140 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { getArticlesByKind, formatDate, KIND_LABELS, type KnowledgeKind } from "../lib/sanity";
+import { KNOWLEDGE_KINDS } from "../data/content";
+
+const kinds = KNOWLEDGE_KINDS.map((k) => k.value as KnowledgeKind);
+const itemsByKind = Object.fromEntries(
+  await Promise.all(kinds.map(async (k) => [k, await getArticlesByKind(k)]))
+) as Record<KnowledgeKind, Awaited<ReturnType<typeof getArticlesByKind>>>;
+
+const counts = Object.fromEntries(kinds.map((k) => [k, itemsByKind[k].length]));
 ---
-<BaseLayout title="Knowledge | SBA Legal Consult">
-  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-    <h1 class="font-display text-4xl font-semibold text-[#16233A]">Knowledge</h1>
-    <p class="mt-4 max-w-xl text-slate-600">Full content coming soon. This stub route exists so the homepage nav never 404s.</p>
-    <a href="/" class="mt-6 inline-block text-sm font-semibold text-[#0F3D8E] underline underline-offset-4">Back home</a>
+<BaseLayout
+  title="Knowledge Centre | SBA Legal Consult"
+  description="Publications, news, and events from SBA Legal Consult — practical legal thinking for individuals and businesses in Ghana."
+>
+  <PageHero
+    title="Knowledge Centre"
+    images={["/backgrounds/835373_preview.jpg"]}
+  />
+
+  <section class="bg-white" aria-label="Knowledge listings">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+      {/* Tab bar — mirrors the competitor pattern: label | label | label */}
+      <div
+        class="flex flex-wrap items-center gap-x-8 gap-y-3"
+        role="tablist"
+        aria-label="Knowledge categories"
+        data-tabs
+      >
+        {kinds.map((kind, i) => (
+          <>
+            {i > 0 && <span class="hidden h-5 w-px bg-[#16233A] sm:block" aria-hidden="true" />}
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${kind}`}
+              aria-controls={`panel-${kind}`}
+              aria-selected={i === 0 ? "true" : "false"}
+              data-tab={kind}
+              class={`font-display pb-1 text-lg transition-colors ${
+                i === 0
+                  ? "font-semibold text-[#16233A] underline underline-offset-8"
+                  : "font-normal text-slate-600 hover:text-[#0F3D8E]"
+              }`}
+            >
+              {KIND_LABELS[kind].plural}
+            </button>
+          </>
+        ))}
+      </div>
+
+      {kinds.map((kind, i) => (
+        <div
+          id={`panel-${kind}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${kind}`}
+          data-panel={kind}
+          class={i === 0 ? "mt-10" : "mt-10 hidden"}
+        >
+          {itemsByKind[kind].length === 0 ? (
+            <p class="max-w-xl text-slate-600">
+              No {KIND_LABELS[kind].plural.toLowerCase()} yet — please check back soon.
+            </p>
+          ) : (
+            <div class="grid gap-x-12 md:grid-cols-2">
+              {itemsByKind[kind].map((a) => (
+                <a
+                  href={`/knowledge/${a.slug}`}
+                  class="group block border-b border-[#D9E1F0] py-5"
+                  aria-label={`Read: ${a.title}`}
+                >
+                  <p class="text-xs">
+                    <span class="font-semibold text-[#16233A]">{KIND_LABELS[kind].singular}</span>
+                    <span class="mx-2 text-slate-300" aria-hidden="true">|</span>
+                    <span class="text-slate-500">{formatDate(a.date)}</span>
+                  </p>
+                  <h3 class="mt-2 text-[15px] font-medium leading-snug text-[#16233A] group-hover:text-[#0F3D8E]">
+                    {a.title}
+                  </h3>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+
+      <p class="mt-10 text-xs text-slate-400" data-tab-counts={JSON.stringify(counts)}>
+        {counts.publication} publications · {counts.news} news · {counts.event} events
+      </p>
+    </div>
   </section>
 </BaseLayout>
+
+<script>
+  // Accessible tabs with hash deep-linking (#publications, #news, #events).
+  const bar = document.querySelector("[data-tabs]");
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-tab]"));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-panel]"));
+
+  const ACTIVE = ["font-semibold", "text-[#16233A]", "underline", "underline-offset-8"];
+  const IDLE = ["font-normal", "text-slate-600"];
+
+  function show(kind: string, pushHash: boolean) {
+    tabs.forEach((t) => {
+      const on = t.dataset.tab === kind;
+      t.setAttribute("aria-selected", String(on));
+      t.classList.remove(...(on ? IDLE : ACTIVE));
+      t.classList.add(...(on ? ACTIVE : IDLE));
+    });
+    panels.forEach((p) => p.classList.toggle("hidden", p.dataset.panel !== kind));
+    if (pushHash) history.replaceState(null, "", `#${kind === "publication" ? "publications" : kind}`);
+  }
+
+  const fromHash = () => {
+    const h = location.hash.replace("#", "");
+    if (h === "news" || h === "events") return h;
+    if (h === "publications") return "publication";
+    return "publication";
+  };
+
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => show(t.dataset.tab!, true));
+    t.addEventListener("keydown", (e) => {
+      let next: number | null = null;
+      if (e.key === "ArrowRight") next = (i + 1) % tabs.length;
+      if (e.key === "ArrowLeft") next = (i - 1 + tabs.length) % tabs.length;
+      if (next !== null) {
+        e.preventDefault();
+        tabs[next].focus();
+        show(tabs[next].dataset.tab!, true);
+      }
+    });
+  });
+
+  window.addEventListener("hashchange", () => show(fromHash(), false));
+  show(fromHash(), false);
+  bar?.setAttribute("data-tabs-ready", "true");
+</script>
