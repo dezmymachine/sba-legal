@@ -384,7 +384,7 @@ export const PEOPLE = [
   },
   {
     name: "Abigail Appiah",
-    title: "Partner",
+    title: "Associate",
     slug: "abigail-appiah",
     image: "/portraits/abigail_appiah.jpg",
     excerpt:
@@ -405,7 +405,7 @@ export const PEOPLE = [
   },
   {
     name: "Ama Saah Dwumah",
-    title: "Partner",
+    title: "Associate",
     slug: "ama-saah-dwumah",
     image: "/portraits/ama_saa_dwuman.jpg",
     excerpt:
@@ -445,7 +445,7 @@ export const PEOPLE = [
   },
   {
     name: "Abena Frema Kyei-Baffour",
-    title: "Partner",
+    title: "Associate",
     slug: "abena-frema-kyei-baffour",
     image: "/portraits/abena_frema_kyei_baffuor.jpg",
     excerpt:
