@@ -1,0 +1,28 @@
+---
+// Inline images in article bodies, cropped/positioned as set in the studio.
+import type { SanityImageSource } from "@sanity/image-url";
+import { urlFor } from "../../lib/sanity";
+
+interface Props {
+  node: {
+    asset?: unknown;
+    alt?: string;
+    crop?: { top: number; bottom: number; left: number; right: number };
+  };
+}
+const { node } = Astro.props;
+const WIDTH = 1400;
+const src = node.asset ? urlFor(node as SanityImageSource).width(WIDTH).url() : null;
+// Asset refs encode the original size (image-<hash>-1500x1000-jpg); apply the editor's
+// crop to get the rendered aspect ratio, so the browser reserves space (no layout shift).
+const ref = (node.asset as { _ref?: string } | undefined)?._ref ?? "";
+const [, w, h] = ref.match(/-(\d+)x(\d+)-/) ?? [];
+const crop = node.crop ?? { top: 0, bottom: 0, left: 0, right: 0 };
+const height =
+  w && h ? Math.round((WIDTH * (+h * (1 - crop.top - crop.bottom))) / (+w * (1 - crop.left - crop.right))) : undefined;
+---
+{src && (
+  <figure>
+    <img src={src} alt={node.alt ?? ""} width={height ? WIDTH : undefined} height={height} loading="lazy" />
+  </figure>
+)}

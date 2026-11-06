@@ -1,16 +1,6 @@
-// ── SBA Legal Consult — Sanity Studio schemas ────────────────────────────────
-// HOW TO USE: these files are drop-in schemas for a Sanity v3 studio.
-//   1. `npx sanity@latest init` (clean project, no predefined schemas)
-//   2. Copy this `sanity/` folder's `schemas/*.ts` into the studio's `schemaTypes/`
-//      and add them to the `types` array in `schemaTypes/index.ts`:
-//        import article from './article'
-//        import person from './person'
-//        export const schemaTypes = [article, person]
-//   3. `npm run dev` in the studio, publish documents, then set
-//      PUBLIC_SANITY_PROJECT_ID (+ DATASET) in this website's `.env`.
-// The GROQ in `src/lib/sanity.ts` is written against exactly these field names —
-// do not rename fields without updating the queries.
-// Requires the `sanity` package (present in any studio, NOT in this website).
+// ── SBA Legal Consult — Knowledge posts (Publications / News / Events) ───────
+// The website's GROQ in `../../src/lib/sanity.ts` is written against exactly these
+// field names — do not rename fields without updating the queries.
 
 import {defineField, defineType} from 'sanity'
 
@@ -21,6 +11,7 @@ export default defineType({
   groups: [
     {name: 'content', title: 'Content', default: true},
     {name: 'display', title: 'Display'},
+    {name: 'seo', title: 'Search'},
   ],
   fields: [
     defineField({
@@ -66,7 +57,20 @@ export default defineType({
       group: 'content',
       of: [
         {type: 'block'},
-        {type: 'image', options: {hotspot: true}},
+        {
+          type: 'image',
+          options: {hotspot: true},
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt text',
+              description: 'Describe the image for screen readers and search engines.',
+              type: 'string',
+            }),
+          ],
+        },
+        // From @sanity/table: the first row renders as the table header on the site.
+        {type: 'table'},
       ],
       validation: (r) => r.required().min(1),
     }),
@@ -92,6 +96,14 @@ export default defineType({
       description: 'Large background image used for the article hero (landscape, min 1600px wide).',
       type: 'image',
       options: {hotspot: true},
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt text',
+          description: 'Describe the image for screen readers and search engines.',
+          type: 'string',
+        }),
+      ],
       group: 'display',
       validation: (r) => r.required(),
     }),
@@ -102,6 +114,24 @@ export default defineType({
       type: 'text',
       rows: 2,
       group: 'display',
+      validation: (r) => r.max(160).warning('Keep it under 160 characters so search results show it in full.'),
+    }),
+    defineField({
+      name: 'seoTitle',
+      title: 'Search title',
+      description: 'Optional. Overrides the heading in Google results. Aim for 50–60 characters.',
+      type: 'string',
+      group: 'seo',
+      validation: (r) => r.max(65).warning('Google usually cuts titles longer than ~60 characters.'),
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'Search description',
+      description: 'Optional. Overrides the excerpt in Google results. Aim for 120–160 characters.',
+      type: 'text',
+      rows: 3,
+      group: 'seo',
+      validation: (r) => r.max(160).warning('Google usually cuts descriptions longer than ~160 characters.'),
     }),
   ],
   preview: {

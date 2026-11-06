@@ -18,25 +18,31 @@ const articles = await getArticles();
     </div>
 
     <div>
-      <!-- stagger-grid: each article row cascades in -->
-      <ul class="stagger-grid divide-y divide-[#D9E1F0] border-y border-[#D9E1F0]">
-        {
-          articles.map((a) => (
-            <li>
-              <a href={`/knowledge/${a.slug}`} class="group block py-4">
-                <p class="text-xs">
-                  <span class="font-semibold text-[#16233A]">{KIND_LABELS[a.kind].singular}</span>
-                  <span class="mx-2 text-slate-300" aria-hidden="true">|</span>
-                  <span class="text-slate-500">{formatDate(a.date)}</span>
-                </p>
-                <span class="mt-1 block text-[15px] font-medium text-[#16233A] group-hover:text-[#0F3D8E]">
-                  {a.title}
-                </span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      {/* stagger-grid: each article row cascades in */}
+      {articles.length === 0 ? (
+        <p class="scroll-reveal border-y border-[#D9E1F0] py-6 text-slate-600">
+          New publications, news and events are on the way — please check back soon.
+        </p>
+      ) : (
+        <ul class="stagger-grid divide-y divide-[#D9E1F0] border-y border-[#D9E1F0]">
+          {
+            articles.map((a) => (
+              <li>
+                <a href={`/knowledge/${a.slug}`} class="group block py-4">
+                  <p class="text-xs">
+                    <span class="font-semibold text-[#16233A]">{KIND_LABELS[a.kind].singular}</span>
+                    <span class="mx-2 text-slate-300" aria-hidden="true">|</span>
+                    <span class="text-slate-500">{formatDate(a.date)}</span>
+                  </p>
+                  <span class="mt-1 block text-[15px] font-medium text-[#16233A] group-hover:text-[#0F3D8E]">
+                    {a.title}
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      )}
       <div class="mt-6 flex justify-end">
         <LearnMore href="/knowledge" />
       </div>

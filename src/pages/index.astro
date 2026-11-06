@@ -5,8 +5,9 @@ import AboutSnippet from "../components/AboutSnippet.astro";
 import PracticeAreas from "../components/PracticeAreas.astro";
 import KnowledgeCentre from "../components/KnowledgeCentre.astro";
 import PeopleGrid from "../components/PeopleGrid.astro";
+import { websiteLd } from "../lib/schema";
 ---
-<BaseLayout>
+<BaseLayout jsonLd={[websiteLd(Astro.site!)]}>
   <Hero />
   <AboutSnippet />
   <PracticeAreas />

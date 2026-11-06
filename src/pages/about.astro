@@ -1,13 +1,115 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
+import LearnMore from "../components/LearnMore.astro";
+import { PEOPLE, SERVICES } from "../data/content";
+
+const managingPartner = PEOPLE.find((p) => p.title === "Managing Partner");
+
 ---
 <BaseLayout
   title="About Us | SBA Legal Consult"
-  description="SBA Legal Consult is a Kumasi-based full-service law firm serving individuals and businesses across Ghana with integrity, excellence, and a client-first approach."
+  description="SBA Legal Consult is a law firm based in Kumasi, Ghana, advising local and international clients on matters where law, business and regulation meet."
 >
   <PageHero
     title="About Us"
-    images={["/backgrounds/99671.jpg"]}
+    images={["/backgrounds/99671.webp"]}
   />
+
+  <section class="bg-white" aria-labelledby="firm-heading">
+    <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:py-20">
+      <div class="scroll-reveal">
+        <h2 id="firm-heading" class="sr-only">The firm</h2>
+        <p class="text-lg leading-relaxed text-[#16233A]">
+          SBA Legal Consult is a law firm based in Kumasi, Ghana. We advise local
+          and international clients on matters where law, business and
+          regulation meet. Our practice covers corporate and commercial law,
+          mining, oil and gas, insolvency and restructuring, medical law, foreign
+          direct investment, immigration and nationality, property law, and
+          litigation and ADR.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          Our clients include investors entering Ghana, established local
+          businesses, companies in financial difficulty, healthcare practitioners
+          and institutions, and individuals dealing with land, residence or
+          citizenship. We take the time to understand each client’s objectives
+          and the industry they operate in. We then give advice that is clear,
+          practical and ready to act on.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          We also follow legal, economic and regulatory developments in Ghana and
+          abroad. Our clients can rely on advice that reflects the current law
+          and anticipates the changes that may affect them.
+        </p>
+      </div>
+
+      {managingPartner && (
+        <aside class="scroll-reveal border border-[#D9E1F0] bg-[#F4F6FA] p-6" aria-labelledby="leadership-heading">
+          <h2 id="leadership-heading" class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">
+            Leadership
+          </h2>
+          <div class="mt-4 flex gap-4">
+            <img
+              src={managingPartner.image}
+              width="900"
+              height="1200"
+              alt={`Portrait of ${managingPartner.name}`}
+              loading="lazy"
+              class="aspect-[3/4] w-24 shrink-0 object-cover"
+            />
+            <div>
+              <p class="text-sm leading-relaxed text-slate-600">
+                The firm is led by its Managing Partner, Dr. Samuel Boadi
+                Adarkwah. He holds a Doctor of the Science of Law (J.S.D.) from
+                Cornell Law School, Ithaca, New York, USA.
+              </p>
+              <div class="mt-4">
+                <LearnMore href={`/people/${managingPartner.slug}`} label="View profile" />
+              </div>
+            </div>
+          </div>
+        </aside>
+      )}
+    </div>
+  </section>
+
+  <section class="bg-[#F4F6FA]" aria-labelledby="expertise-heading">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+      <h2 id="expertise-heading" class="scroll-reveal font-display text-3xl font-semibold text-[#16233A]">
+        Our Expertise
+      </h2>
+      <!-- stagger-grid: GSAP cascades each expertise card in sequentially -->
+      <ul class="stagger-grid mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {SERVICES.map((e) => (
+          <li>
+            <a href={`/expertise/${e.slug}`} class="group block h-full border border-[#D9E1F0] bg-white p-6 transition-colors hover:border-[#0F3D8E]">
+              <h3 class="text-base font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">{e.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-slate-600">{e.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-white" aria-label="More about us">
+    <div class="mx-auto grid max-w-7xl gap-6 px-4 py-14 sm:px-6 md:grid-cols-2 lg:py-20">
+      <a href="/people" class="scroll-reveal group block border border-[#D9E1F0] p-8 transition-colors hover:border-[#0F3D8E]">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">Our People</p>
+        <p class="mt-3 text-base leading-relaxed text-slate-600">
+          Meet the lawyers who bring courtroom experience, transactional skill and
+          academic depth to every matter.
+        </p>
+        <p class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E]">Meet the team</p>
+      </a>
+      <a href="/join-us" class="scroll-reveal group block border border-[#D9E1F0] p-8 transition-colors hover:border-[#0F3D8E]">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">Join Us</p>
+        <p class="mt-3 text-base leading-relaxed text-slate-600">
+          We welcome applications from interns, pupils, associates and staff who
+          share our commitment to integrity and excellence.
+        </p>
+        <p class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E]">Apply to join</p>
+      </a>
+    </div>
+  </section>
 </BaseLayout>

@@ -1,0 +1,25 @@
+---
+// Block styles for article bodies. The page title is the only h1, so editor
+// h1/h2 become h2 and h3–h6 become h3; empty paragraphs are dropped.
+import type { BlockProps } from "astro-portabletext/types";
+
+type Props = BlockProps;
+const { node, index, isInline, ...attrs } = Astro.props;
+const style = node.style ?? "normal";
+// By render time spans are nested under their marks, so walk the tree for text.
+type Child = { text?: string; children?: Child[] };
+const hasText = (nodes: Child[] = []): boolean =>
+  nodes.some((c) => !!c.text?.trim() || hasText(c.children));
+const isEmpty = !hasText(node.children as Child[]);
+---
+{
+  style === "h1" || style === "h2" ? (
+    <h2 {...attrs}><slot /></h2>
+  ) : /^h[3-6]$/.test(style) ? (
+    <h3 {...attrs}><slot /></h3>
+  ) : style === "blockquote" ? (
+    <blockquote {...attrs}><slot /></blockquote>
+  ) : isEmpty ? null : (
+    <p {...attrs}><slot /></p>
+  )
+}

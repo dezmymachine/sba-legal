@@ -20,6 +20,9 @@ const {
       {images.map((src, i) => (
         <img
           src={src}
+          width="1920"
+          height="1200"
+          fetchpriority={i === 0 ? "high" : undefined}
           alt=""
           aria-hidden="true"
           loading={i === 0 ? "eager" : "lazy"}

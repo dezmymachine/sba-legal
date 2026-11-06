@@ -1,14 +1,148 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
-import { PAGE_HERO_IMAGES } from "../data/content";
+import { PAGE_HERO_IMAGES, SITE } from "../data/content";
+
+// FormSubmit relays the static form (with CV attachment) to the chambers inbox.
+// The first submission sends an activation email that must be confirmed once.
+const formAction = `https://formsubmit.co/${SITE.email}`;
+const POSITIONS = ["Intern", "Pupil", "Associate", "Staff"];
+const MAX_CV_MB = 5;
+
+const fieldClass =
+  "mt-2 block w-full border border-[#D9E1F0] bg-white px-4 py-3 text-sm text-[#16233A] placeholder:text-slate-400 focus:border-[#0F3D8E] focus:outline-none focus:ring-1 focus:ring-[#0F3D8E]";
 ---
 <BaseLayout
   title="Join Us | SBA Legal Consult"
-  description="Build your legal career with SBA Legal Consult in Kumasi — opportunities for lawyers who pursue excellence and put clients first."
+  description="Apply to join SBA Legal Consult in Kumasi — opportunities for interns, pupils, associates and staff who pursue excellence and put clients first."
 >
   <PageHero
     title="Join Us"
     images={PAGE_HERO_IMAGES}
   />
+
+  <section class="bg-white" aria-labelledby="apply-heading">
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:py-20">
+      <div class="scroll-reveal">
+        <h2 id="apply-heading" class="font-display text-3xl font-semibold text-[#16233A]">
+          Build your career with us
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          We welcome applications from interns, pupils, associates and staff who
+          share our commitment to integrity, excellence and putting clients
+          first.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          Complete the form with your details and attach your CV. Applications
+          go directly to our chambers, and we will be in touch if there is a
+          suitable opening.
+        </p>
+        <p class="mt-6 text-sm text-slate-600">
+          You can also email your application to{" "}
+          <a href={`mailto:${SITE.email}`} class="font-semibold text-[#0F3D8E] hover:text-[#0A2A63]">{SITE.email}</a>.
+        </p>
+      </div>
+
+      <div class="scroll-reveal">
+        <div
+          id="apply-success"
+          class="hidden border border-[#0F3D8E] bg-[#F4F6FA] p-6"
+          role="status"
+        >
+          <p class="text-base font-semibold text-[#16233A]">Thank you — your application has been sent.</p>
+          <p class="mt-2 text-sm text-slate-600">We will review it and be in touch if there is a suitable opening.</p>
+        </div>
+
+        <form
+          id="apply-form"
+          action={formAction}
+          method="POST"
+          enctype="multipart/form-data"
+          class="grid gap-6 border border-[#D9E1F0] bg-[#F4F6FA] p-6 sm:p-8"
+        >
+          <input type="hidden" name="_subject" value="New Join Us application — SBA Legal Consult" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" id="apply-next" value="" />
+          {/* Honeypot: bots fill it, people never see it */}
+          <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+          <div>
+            <label for="apply-name" class="text-sm font-semibold text-[#16233A]">Full name</label>
+            <input id="apply-name" name="name" type="text" required autocomplete="name" class={fieldClass} />
+          </div>
+
+          <div>
+            <label for="apply-email" class="text-sm font-semibold text-[#16233A]">Email address</label>
+            <input id="apply-email" name="email" type="email" required autocomplete="email" class={fieldClass} />
+          </div>
+
+          <div>
+            <label for="apply-position" class="text-sm font-semibold text-[#16233A]">Applying as</label>
+            <select id="apply-position" name="position" required class={fieldClass}>
+              <option value="" disabled selected>Select a position</option>
+              {POSITIONS.map((p) => <option value={p}>{p}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <label for="apply-cv" class="text-sm font-semibold text-[#16233A]">CV / Résumé</label>
+            <input
+              id="apply-cv"
+              name="attachment"
+              type="file"
+              required
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              aria-describedby="apply-cv-hint"
+              class={`${fieldClass} file:mr-4 file:border-0 file:bg-[#0F3D8E] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white`}
+            />
+            <p id="apply-cv-hint" class="mt-2 text-xs text-slate-500">PDF or Word document, up to {MAX_CV_MB}MB.</p>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="inline-flex items-center gap-2 bg-[#0F3D8E] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0A2A63] disabled:opacity-60"
+            >
+              Submit application
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<script define:vars={{ maxBytes: MAX_CV_MB * 1024 * 1024 }}>
+  const form = document.getElementById("apply-form");
+  const cv = document.getElementById("apply-cv");
+
+  // FormSubmit needs an absolute redirect; build it from wherever the site is hosted.
+  document.getElementById("apply-next").value =
+    `${location.origin}${location.pathname}?submitted=1`;
+
+  if (new URLSearchParams(location.search).has("submitted")) {
+    document.getElementById("apply-success").classList.remove("hidden");
+    form.classList.add("hidden");
+  }
+
+  cv.addEventListener("change", () => {
+    const file = cv.files[0];
+    cv.setCustomValidity(
+      file && file.size > maxBytes ? "Please attach a CV smaller than 5MB." : ""
+    );
+    cv.reportValidity();
+  });
+
+  // Re-enable the button if the page is restored from the back/forward cache.
+  window.addEventListener("pageshow", () => {
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = false;
+    btn.textContent = "Submit application";
+  });
+
+  form.addEventListener("submit", () => {
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+  });
+</script>

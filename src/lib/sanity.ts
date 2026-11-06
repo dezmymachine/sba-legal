@@ -1,10 +1,11 @@
-import { createClient } from "@sanity/client";
-import { ARTICLES, PRACTICES, PEOPLE } from "../data/content";
+import { createClient, type SanityClient } from "@sanity/client";
+import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
+import { ARTICLES, PEOPLE } from "../data/content";
 
-// Sanity-ready data layer.
-// If SANITY env vars are set, these fetch from Sanity.
-// Otherwise they fall back to local mock content so the
-// site builds and previews without CMS credentials.
+// Knowledge posts data layer.
+// If SANITY env vars are set, posts come from Sanity (studio in /studio).
+// Otherwise they fall back to the sample ARTICLES so the site builds and
+// previews without CMS credentials.
 
 const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
 const dataset = import.meta.env.PUBLIC_SANITY_DATASET ?? "production";
@@ -15,9 +16,16 @@ const client =
         projectId,
         dataset,
         apiVersion: "2026-01-01",
-        useCdn: true,
+        // Builds are triggered right after publishing; the live API avoids stale CDN reads.
+        useCdn: false,
       })
     : null;
+
+// Builds CDN URLs that honour the crop and hotspot editors set in the studio.
+const imageBuilder = createImageUrlBuilder({ projectId: projectId ?? "", dataset });
+export function urlFor(source: SanityImageSource) {
+  return imageBuilder.image(source).auto("format");
+}
 
 export type KnowledgeKind = "publication" | "news" | "event";
 
@@ -25,7 +33,7 @@ export interface ArticleAuthor {
   name: string;
   title: string;
   slug: string;
-  image: string;
+  image?: string;
 }
 
 export interface Article {
@@ -34,6 +42,9 @@ export interface Article {
   kind: KnowledgeKind;
   date: string;
   excerpt?: string;
+  /** Optional search-result overrides set in the studio. */
+  seoTitle?: string;
+  seoDescription?: string;
   heroImage?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: any[];
@@ -80,87 +91,97 @@ function normalizeMock(a: any): Article {
 
 const byDateDesc = (a: Article, b: Article) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0);
 
-const ARTICLE_FIELDS = `title, "slug": slug.current, kind, date, excerpt, "heroImage": heroImage.asset->url, "author": author->{name, title, "slug": slug.current, "image": photo.asset->url}`;
+// Image fields stay raw in GROQ so urlFor() can apply crop + hotspot.
+const ARTICLE_FIELDS = `title, "slug": slug.current, kind, date, excerpt, seoTitle, seoDescription, heroImage, "author": author->{name, title, "slug": slug.current, photo}`;
+
+type SanityArticle = Omit<Article, "heroImage" | "author"> & {
+  heroImage?: SanityImageSource;
+  author: (Omit<ArticleAuthor, "image"> & { photo?: SanityImageSource }) | null;
+};
+
+// Hero renders full-bleed (also used as og:image); author portraits are 3:4.
+function fromSanityArticle({ heroImage, author, ...rest }: SanityArticle): Article {
+  return {
+    ...rest,
+    heroImage: heroImage ? urlFor(heroImage).width(1800).height(1000).fit("crop").url() : undefined,
+    author: author && {
+      name: author.name,
+      title: author.title,
+      slug: author.slug,
+      // No studio portrait? Use the website's own portrait for the same person.
+      image: author.photo
+        ? urlFor(author.photo).width(480).height(640).fit("crop").url()
+        : PEOPLE.find((p) => p.slug === author.slug)?.image,
+    },
+  };
+}
+
+// Once Sanity is configured it is the only source of posts: empty results stay
+// empty (never the sample ARTICLES). A failed fetch fails production builds so a
+// broken fetch can't ship sample content — Cloudflare keeps serving the last good
+// deploy. In `astro dev` a network blip falls back to the samples with a warning.
+async function fromSanity<T>(load: (c: SanityClient) => Promise<T>, sample: () => T): Promise<T> {
+  if (!client) return sample();
+  try {
+    return await load(client);
+  } catch (err) {
+    if (!import.meta.env.DEV) throw err;
+    console.warn(`[sanity] fetch failed (${(err as Error).message}) — showing sample posts in dev.`);
+    return sample();
+  }
+}
 
 // Latest 3 across all kinds — homepage Knowledge Centre.
-export async function getArticles(): Promise<Article[]> {
-  const fallback = ARTICLES.map(normalizeMock)
-    .sort(byDateDesc)
-    .slice(0, 3);
-  if (!client) return fallback;
-  try {
-    const rows = await client.fetch(
-      `*[_type == "article"] | order(date desc)[0...3]{${ARTICLE_FIELDS}}`
-    );
-    return rows?.length ? rows : fallback;
-  } catch {
-    return fallback;
-  }
+export function getArticles(): Promise<Article[]> {
+  return fromSanity(
+    async (c) =>
+      (
+        await c.fetch<SanityArticle[]>(
+          `*[_type == "article"] | order(date desc)[0...3]{${ARTICLE_FIELDS}}`
+        )
+      ).map(fromSanityArticle),
+    () => ARTICLES.map(normalizeMock).sort(byDateDesc).slice(0, 3)
+  );
 }
 
-export async function getArticlesByKind(kind: KnowledgeKind): Promise<Article[]> {
-  const fallback = ARTICLES.filter((a) => a.kind === kind)
-    .map(normalizeMock)
-    .sort(byDateDesc);
-  if (!client) return fallback;
-  try {
-    const rows = await client.fetch(
-      `*[_type == "article" && kind == $kind] | order(date desc){${ARTICLE_FIELDS}}`,
-      { kind }
-    );
-    return rows?.length ? rows : fallback;
-  } catch {
-    return fallback;
-  }
+export function getArticlesByKind(kind: KnowledgeKind): Promise<Article[]> {
+  return fromSanity(
+    async (c) =>
+      (
+        await c.fetch<SanityArticle[]>(
+          `*[_type == "article" && kind == $kind] | order(date desc){${ARTICLE_FIELDS}}`,
+          { kind }
+        )
+      ).map(fromSanityArticle),
+    () => ARTICLES.filter((a) => a.kind === kind).map(normalizeMock).sort(byDateDesc)
+  );
 }
 
-export async function getAllArticleSlugs(): Promise<string[]> {
-  if (!client) return ARTICLES.map((a) => a.slug);
-  try {
-    const rows: string[] = await client.fetch(
-      `*[_type == "article" && defined(slug.current)].slug.current`
-    );
-    return rows?.length ? rows : ARTICLES.map((a) => a.slug);
-  } catch {
-    return ARTICLES.map((a) => a.slug);
-  }
+export function getAllArticleSlugs(): Promise<string[]> {
+  return fromSanity(
+    (c) => c.fetch<string[]>(`*[_type == "article" && defined(slug.current)].slug.current`),
+    () => ARTICLES.map((a) => a.slug)
+  );
 }
 
-export async function getArticle(slug: string): Promise<Article | null> {
-  const mock = ARTICLES.find((a) => a.slug === slug);
-  if (!client) return mock ? normalizeMock(mock) : null;
-  try {
-    const row = await client.fetch(
-      `*[_type == "article" && slug.current == $slug][0]{${ARTICLE_FIELDS}, body}`,
-      { slug }
-    );
-    if (row) return row;
-    return mock ? normalizeMock(mock) : null;
-  } catch {
-    return mock ? normalizeMock(mock) : null;
-  }
+export function getArticle(slug: string): Promise<Article | null> {
+  return fromSanity(
+    async (c) => {
+      const row = await c.fetch<SanityArticle | null>(
+        `*[_type == "article" && slug.current == $slug][0]{${ARTICLE_FIELDS}, body}`,
+        { slug }
+      );
+      return row && fromSanityArticle(row);
+    },
+    () => {
+      const mock = ARTICLES.find((a) => a.slug === slug);
+      return mock ? normalizeMock(mock) : null;
+    }
+  );
 }
 
-export async function getPractices() {
-  if (!client) return PRACTICES;
-  try {
-    const rows = await client.fetch(
-      `*[_type == "practiceArea" && featured == true][0...4]{title, "slug": slug.current, "image": cardImage.asset->url}`
-    );
-    return rows?.length ? rows : PRACTICES;
-  } catch {
-    return PRACTICES;
-  }
-}
-
+// People pages are managed in code (PEOPLE); Sanity `person` docs exist only so
+// articles can reference an author.
 export async function getPeople() {
-  if (!client) return PEOPLE;
-  try {
-    const rows = await client.fetch(
-      `*[_type == "person" && featured == true][0...6]{name, title, "slug": slug.current, "image": photo.asset->url}`
-    );
-    return rows?.length ? rows : PEOPLE;
-  } catch {
-    return PEOPLE;
-  }
+  return PEOPLE;
 }

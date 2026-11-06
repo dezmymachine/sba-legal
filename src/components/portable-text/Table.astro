@@ -1,0 +1,24 @@
+---
+// Tables from @sanity/table. The first row is the header; the first column labels
+// each row. Wide tables scroll sideways on small screens instead of overflowing.
+interface Props {
+  node: { rows?: { _key?: string; cells?: string[] }[] };
+}
+const [head, ...rows] = Astro.props.node.rows ?? [];
+---
+{head && (
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>{(head.cells ?? []).map((c) => <th scope="col">{c}</th>)}</tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr>
+            {(r.cells ?? []).map((c, i) => (i === 0 ? <th scope="row">{c}</th> : <td>{c}</td>))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}

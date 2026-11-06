@@ -9,6 +9,7 @@ import {
   formatDate,
   KIND_LABELS,
 } from "../../lib/sanity";
+import { articleLd, breadcrumbLd } from "../../lib/schema";
 
 // Static detail pages backed by local content today, Sanity tomorrow:
 // slugs come from Sanity when credentials are set, mocks otherwise.
@@ -32,11 +33,18 @@ const latest = (await getArticles()).filter(
   (a) => a.slug !== article.slug && !sameKind.some((s) => s.slug === a.slug)
 );
 const recommended = [...sameKind, ...latest].slice(0, 3);
+
+// Long headlines already fill the ~60-char SERP title; skip the brand suffix then.
+const title = article.seoTitle ?? (article.title.length > 45 ? article.title : `${article.title} | SBA Legal Consult`);
 ---
 <BaseLayout
-  title={`${article.title} | SBA Legal Consult`}
-  description={article.excerpt ?? article.title}
+  title={title}
+  description={article.seoDescription ?? article.excerpt ?? article.title}
   ogImage={article.heroImage ?? "/og-default.jpg"}
+  jsonLd={[
+    articleLd(article, Astro.site!),
+    breadcrumbLd([["Home", "/"], ["Knowledge Centre", "/knowledge/"], [article.title, `/knowledge/${article.slug}/`]], Astro.site!),
+  ]}
 >
   {/* Detail hero: article art with dark veil, kind eyebrow + white title */}
   <section aria-label={article.title} class="relative isolate overflow-hidden bg-[#0A2A63]">
@@ -44,6 +52,9 @@ const recommended = [...sameKind, ...latest].slice(0, 3);
       <div class="absolute inset-0 -z-10">
         <img
           src={article.heroImage}
+          width="1800"
+          height="1000"
+          fetchpriority="high"
           alt=""
           aria-hidden="true"
           loading="eager"
@@ -94,7 +105,8 @@ const recommended = [...sameKind, ...latest].slice(0, 3);
       </div>
 
       <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_240px]">
-        <div>
+        {/* min-w-0: wide content (tables) scrolls inside the column, not the page */}
+        <div class="min-w-0">
           <ArticleBody body={article.body} />
           <a
             href="/knowledge"
@@ -121,14 +133,18 @@ const recommended = [...sameKind, ...latest].slice(0, 3);
           <aside aria-label={`Author: ${article.author.name}`}>
             <h2 class="font-display text-center text-xl font-medium text-[#16233A]">Author</h2>
             <a href={`/people/${article.author.slug}`} class="group mt-4 block">
-              <div class="overflow-hidden">
-                <img
-                  src={article.author.image}
-                  alt={`Portrait of ${article.author.name}`}
-                  loading="lazy"
-                  class="mx-auto aspect-[3/4] w-36 object-cover sm:w-40"
-                />
-              </div>
+              {article.author.image && (
+                <div class="overflow-hidden">
+                  <img
+                    src={article.author.image}
+                    width="480"
+                    height="640"
+                    alt={`Portrait of ${article.author.name}`}
+                    loading="lazy"
+                    class="mx-auto aspect-[3/4] w-36 object-cover sm:w-40"
+                  />
+                </div>
+              )}
               <p class="mt-3 text-center text-sm font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">
                 {article.author.name}
               </p>
@@ -149,6 +165,8 @@ const recommended = [...sameKind, ...latest].slice(0, 3);
                   <div class="card-hover overflow-hidden">
                     <img
                       src={r.heroImage}
+                      width="1800"
+                      height="1000"
                       alt=""
                       aria-hidden="true"
                       loading="lazy"

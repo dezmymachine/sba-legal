@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { PEOPLE } from "../../data/content";
+import { PEOPLE, serviceForFocus } from "../../data/content";
+import { breadcrumbLd, personLd } from "../../lib/schema";
 
 // Static detail pages backed by local content.
 // When Sanity is connected, extend this with a single-person fetch.
@@ -12,20 +13,30 @@ export async function getStaticPaths() {
 }
 
 const { person } = Astro.props;
+// Keep the SERP title within ~60 chars: drop the role when the name is long.
+const fullTitle = `${person.name} — ${person.title} | SBA Legal Consult`;
+const pageTitle = fullTitle.length <= 60 ? fullTitle : `${person.name} | SBA Legal Consult`;
 const others = PEOPLE.filter((p) => p.slug !== person.slug);
 
 // Single shared art for every bio hero.
-const heroImage = "/backgrounds/62.jpg";
+const heroImage = "/backgrounds/62.webp";
 ---
 <BaseLayout
-  title={`${person.name} — ${person.title} | SBA Legal Consult`}
+  title={pageTitle}
   description={person.excerpt ?? `${person.name}, ${person.title} at SBA Legal Consult in Kumasi, Ghana.`}
+  ogImage={person.image}
+  jsonLd={[
+    personLd(person, Astro.site!),
+    breadcrumbLd([["Home", "/"], ["Our People", "/people/"], [person.name, `/people/${person.slug}/`]], Astro.site!),
+  ]}
 >
   {/* Bio hero: background art with designation + name left, portrait right */}
   <section aria-label={`${person.name}, ${person.title}`} class="relative isolate overflow-hidden bg-[#EDEFF3]">
     <div class="absolute inset-0 -z-10">
       <img
         src={heroImage}
+        width="1920"
+        height="1200"
         alt=""
         aria-hidden="true"
         loading="eager"
@@ -70,6 +81,9 @@ const heroImage = "/backgrounds/62.jpg";
       <div class="justify-self-start lg:justify-self-end">
         <img
           src={person.image}
+          width="900"
+          height="1200"
+          fetchpriority="high"
           alt={`Portrait of ${person.name}`}
           loading="eager"
           class="aspect-[3/4] w-72 object-cover shadow-xl sm:w-80"
@@ -96,11 +110,18 @@ const heroImage = "/backgrounds/62.jpg";
                 Focus areas
               </h2>
               <ul class="mt-3 flex flex-wrap gap-2">
-                {person.focus.map((f: string) => (
-                  <li class="border border-[#D9E1F0] bg-white px-3 py-1.5 text-xs font-medium text-[#16233A]">
-                    {f}
-                  </li>
-                ))}
+                {person.focus.map((f: string) => {
+                  const service = serviceForFocus(f);
+                  return (
+                    <li class="border border-[#D9E1F0] bg-white text-xs font-medium text-[#16233A]">
+                      {service ? (
+                        <a href={`/expertise/${service.slug}`} class="block px-3 py-1.5 hover:text-[#0F3D8E]">{f}</a>
+                      ) : (
+                        <span class="block px-3 py-1.5">{f}</span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -117,6 +138,8 @@ const heroImage = "/backgrounds/62.jpg";
               <div class="card-hover overflow-hidden">
                 <img
                   src={p.image}
+                  width="900"
+                  height="1200"
                   alt={p.name}
                   loading="lazy"
                   class="aspect-[3/4] w-full object-cover"

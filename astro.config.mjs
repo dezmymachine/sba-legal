@@ -5,8 +5,9 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // Update this to the live domain once confirmed
-  site: 'https://sbalegalconsult.com',
+  // Canonical origin. Set PUBLIC_SITE_URL on Cloudflare once the domain is live
+  // (it also switches indexing on — see src/lib/seo.ts).
+  site: process.env.PUBLIC_SITE_URL ?? 'https://sbalegalconsult.com',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],

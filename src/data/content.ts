@@ -1,67 +1,151 @@
-export const NAV_ITEMS = [
+// Items with `children` render as dropdowns; the parent href is the first child.
+export const NAV_ITEMS: {
+  label: string;
+  href: string;
+  children?: { label: string; href: string }[];
+}[] = [
   { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
+  {
+    label: "About Us",
+    href: "/about",
+    children: [
+      { label: "About the Firm", href: "/about" },
+      { label: "Our People", href: "/people" },
+      { label: "Join Us", href: "/join-us" },
+    ],
+  },
   { label: "Expertise", href: "/expertise" },
-  { label: "People", href: "/people" },
   { label: "Knowledge", href: "/knowledge" },
-  { label: "Join Us", href: "/join-us" },
   { label: "Contact", href: "/contact" },
 ];
 
 export const HERO_SLIDES = [
   {
-    src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop",
+    src: "/images/hero-towers.webp",
     alt: "Corporate office towers in daylight",
   },
   {
-    src: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1920&auto=format&fit=crop",
+    src: "/images/hero-office.webp",
     alt: "Modern law office interior",
   },
   {
-    src: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=1920&auto=format&fit=crop",
+    src: "/images/hero-gavel.webp",
     alt: "Gavel and law books on a desk",
   },
 ];
 
 // Shared inner-page hero art — cycles through every file in public/backgrounds.
 export const PAGE_HERO_IMAGES = [
-  "/backgrounds/28337.jpg",
-  "/backgrounds/29196636.jpg",
-  "/backgrounds/62.jpg",
-  "/backgrounds/835373_preview.jpg",
-  "/backgrounds/99671.jpg",
+  "/backgrounds/28337.webp",
+  "/backgrounds/29196636.webp",
+  "/backgrounds/62.webp",
+  "/backgrounds/835373_preview.webp",
+  "/backgrounds/99671.webp",
 ];
 
-export const PRACTICES = [
+// Services as set out in the firm's About copy. Each has a page at /expertise/<slug>;
+// those in FEATURED_ORDER (all have card art) lead the homepage.
+export const SERVICES: {
+  title: string;
+  slug: string;
+  description: string;
+  /** Matched against each person's `focus` to list who advises on this service. */
+  keywords: string[];
+  /** Longer page copy for /expertise/<slug> — add once the firm has approved it. */
+  body?: string[];
+  image?: string;
+  alt?: string;
+}[] = [
   {
-    title: "Corporate and Commercial Law",
-    slug: "corporate-commercial",
+    title: "Mining, Oil and Gas",
+    slug: "mining-oil-gas",
+    keywords: ["Mining", "Oil and Gas"],
+    description:
+      "Licensing, regulatory compliance, local content requirements, and agreements across the extractive sector.",
     image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=900&auto=format&fit=crop",
-    alt: "Glass corporate building",
-  },
-  {
-    title: "Oil and Gas",
-    slug: "oil-and-gas",
-    image:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=900&auto=format&fit=crop",
+      "/images/practice-energy.webp",
     alt: "Energy infrastructure at dusk",
   },
   {
-    title: "Property Law",
-    slug: "property-law",
+    title: "Corporate and Commercial Law",
+    slug: "corporate-commercial",
+    keywords: ["Corporate"],
+    description:
+      "Company formation, corporate governance, commercial contracts, and mergers and acquisitions.",
     image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=900&auto=format&fit=crop",
-    alt: "Property keys and house model",
+      "/images/practice-corporate.webp",
+    alt: "Glass corporate building",
+  },
+  {
+    title: "Insolvency and Restructuring",
+    slug: "insolvency-restructuring",
+    keywords: ["Insolvency"],
+    description:
+      "Business rescue, administration, liquidation, and debt restructuring for companies and creditors.",
+  },
+  {
+    title: "Foreign Direct Investment",
+    slug: "foreign-direct-investment",
+    keywords: ["Investment"],
+    description:
+      "Structuring market entry, investment registration, incentives, and protections for foreign investors.",
+  },
+  {
+    title: "International Law",
+    slug: "international-law",
+    keywords: ["International"],
+    description:
+      "Cross-border transactions, treaty-related questions, and matters involving more than one legal system.",
+  },
+  {
+    title: "Medical Law",
+    slug: "medical-law",
+    keywords: ["Medical"],
+    description:
+      "Regulation of health practitioners and facilities, patients’ rights, consent, and professional liability.",
   },
   {
     title: "Immigration and Nationality",
     slug: "immigration-nationality",
+    keywords: ["Immigration"],
+    description:
+      "Work and residence permits, citizenship, dual nationality, and the right of abode for Ghanaians abroad and foreign nationals.",
     image:
-      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=900&auto=format&fit=crop",
+      "/images/practice-immigration.webp",
     alt: "Airplane wing above clouds",
   },
+  {
+    title: "Property Law",
+    slug: "property-law",
+    keywords: ["Property"],
+    description:
+      "Land acquisition, title searches, registration, leases, conveyancing, and land disputes.",
+    image:
+      "/images/practice-property.webp",
+    alt: "Property keys and house model",
+  },
+  {
+    title: "Litigation and ADR",
+    slug: "litigation-adr",
+    keywords: ["Litigation", "Dispute"],
+    description:
+      "Representation in civil and criminal disputes before the courts, and resolution of disputes through arbitration, mediation and negotiation.",
+  },
 ];
+
+// Homepage order: corporate first, then the extractive sector, property, immigration.
+const FEATURED_ORDER = ["corporate-commercial", "mining-oil-gas", "property-law", "immigration-nationality"];
+export const PRACTICES = FEATURED_ORDER.map((slug) => SERVICES.find((s) => s.slug === slug)!);
+
+const matches = (keywords: string[], label: string) =>
+  keywords.some((k) => label.toLowerCase().includes(k.toLowerCase()));
+
+/** People whose focus areas match a service. */
+export const peopleForService = (service: (typeof SERVICES)[number]) =>
+  PEOPLE.filter((p) => p.focus?.some((f) => matches(service.keywords, f)));
+
+/** The service page a focus-area label belongs to, if any. */
+export const serviceForFocus = (label: string) => SERVICES.find((s) => matches(s.keywords, label));
 
 export const KNOWLEDGE_KINDS = [
   { value: "publication", singular: "Publication", plural: "Publications" },
@@ -359,12 +443,25 @@ export const ARTICLES = [
   },
 ];
 
-export const PEOPLE = [
+// `alumniOf` / `memberOf` repeat what each bio states; they feed Person structured data.
+export const PEOPLE: {
+  name: string;
+  title: string;
+  slug: string;
+  alumniOf: string[];
+  memberOf?: string[];
+  image: string;
+  excerpt?: string;
+  focus?: string[];
+  bio?: string[];
+}[] = [
   {
     name: "Dr Samuel Boadi Adarkwah",
     title: "Managing Partner",
     slug: "samuel-boadi-adarkwah",
-    image: "/portraits/samuel_boadi_adarkwah.jpg",
+    alumniOf: ["Cornell Law School", "Kwame Nkrumah University of Science and Technology"],
+    memberOf: ["Ghana Bar Association", "Ashanti Bar Association"],
+    image: "/portraits/samuel_boadi_adarkwah.webp",
     excerpt:
       "Barrister & Solicitor of the Supreme Court of Ghana with over 17 years' experience across commercial litigation, energy, mining, and insolvency.",
     focus: [
@@ -376,7 +473,7 @@ export const PEOPLE = [
     ],
     bio: [
       "Samuel Boadi Adarkwah is the Managing Partner of SBA Legal Consult in Kumasi. He has over 17 years' experience in legal practice, having been called to the Ghana Bar in 2009. As head of the firm, he leads its practice in commercial litigation, energy (oil and gas), mining, corporate insolvency and restructuring, and telecommunications, managing and supervising matters and appearing before the courts at every level of the Ghanaian judicial system.",
-      "He has acted as Counsel in complex civil and commercial disputes and advises oil marketing companies on regulatory compliance, joint ventures, mineral and mining compensation and land acquisition. Before founding SBA Legal Consult, he was Senior Partner at Owusu-Dapaa Law & Associates.",
+      "He has acted as Counsel in complex civil and commercial disputes and advises oil marketing companies on regulatory compliance, joint ventures, mineral and mining compensation and land acquisition.",
       "Samuel is a recognised voice on insolvency law in Ghana. His work has been published in the International Insolvency Review, the Commonwealth Law Bulletin, the African Journal of International and Comparative Law and the Routledge Handbook on African Law. He is a contributing author to Companies, Corporate Insolvency and Restructuring in Ghana: The Law and Practice (LexisNexis) and serves as Editor of the Ghana Insolvency and Restructuring Journal.",
       "Samuel holds a Doctor of the Science of Law (J.S.D.) and a Master of Laws (LL.M.) from Cornell Law School, Ithaca, New York, U.S.A., where he was a Rudolf B. Schlesinger Fellow, Institute for African Development Fellow and Degree Marshal of his LL.M. class. He also holds an LLB with First Class Honours from the Kwame Nkrumah University of Science and Technology (KNUST), Kumasi, where he graduated as the overall best undergraduate student.",
       "He is a member of the Ghana Bar Association, the Ashanti Bar Association and a fellow of the Southern African Institute for Policy and Research.",
@@ -386,7 +483,8 @@ export const PEOPLE = [
     name: "Abigail Appiah",
     title: "Associate",
     slug: "abigail-appiah",
-    image: "/portraits/abigail_appiah.jpg",
+    alumniOf: ["Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
+    image: "/portraits/abigail_appiah.webp",
     excerpt:
       "Disputes practitioner resolving matters for institutions and individuals through litigation and alternative dispute resolution.",
     focus: [
@@ -407,7 +505,8 @@ export const PEOPLE = [
     name: "Ama Saah Dwumah",
     title: "Associate",
     slug: "ama-saah-dwumah",
-    image: "/portraits/ama_saa_dwuman.jpg",
+    alumniOf: ["Kwame Nkrumah University of Science and Technology"],
+    image: "/portraits/ama_saa_dwuman.webp",
     excerpt:
       "Internationally trained lawyer with cross-jurisdictional experience across Ghana and The Gambia.",
     focus: [
@@ -426,28 +525,34 @@ export const PEOPLE = [
     name: "Ezekiel Osei",
     title: "Associate",
     slug: "ezekiel-osei",
-    image: "/portraits/ezekiel_osei.jpg",
+    alumniOf: ["University of Cambridge", "Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
+    memberOf: ["Ghana Bar Association", "Young International Arbitration Group"],
+    image: "/portraits/ezekiel_osei.webp",
     excerpt:
-      "Cambridge-trained counsel focused on medical law, corporate transactions, commercial litigation and regulatory compliance.",
+      "Cambridge-trained counsel advising on corporate and commercial law, insolvency, competition, international law and technology governance.",
     focus: [
-      "Medical Law and Ethics",
-      "Corporate Law",
-      "Commercial Litigation",
-      "Claims and Compensation",
-      "Regulatory Compliance",
+      "Corporate and Commercial Law",
+      "Corporate Insolvency",
+      "International Law",
+      "Competition Law",
+      "International Investment Law",
+      "AI and Technology Governance",
+      "Human Rights Law",
     ],
     bio: [
-      "Ezekiel Osei is an Associate at SBA Legal Consult, based in Kumasi. His legal expertise is distinguished by a specialised focus on Medical Law and Ethics, Corporate Law (Finance, Governance, and Insolvency), Transactions, Commercial Litigation, Claims and Compensation, and regulatory compliance, making him an adept counsel for major healthcare institutions navigating clinical negligence liability and corporate governance.",
-      "Ezekiel obtained his Master of Laws (LLM) degree with First Class Honours from the University of Cambridge, United Kingdom, where he ranked third out of 195 candidates as an FCDO Chevening Scholar. He received the Faculty of Law Prizes for both Competition Law and Corporate Insolvency Law, as well as the Jeffrey W. Cook Prize for the Best Performing LLM student (Hughes Hall College) and the Johnston Prize for Distinguished Postgraduate Studies. He earned his Bachelor of Laws (LLB) with First Class Honours from KNUST, graduating among the top three students in his cohort, before obtaining his professional qualifying certificate from the Ghana School of Law in November 2022.",
-      "He served as a Teaching Assistant in Medical Law and Ethics at the KNUST Faculty of Law for four years, served as a Resource Person for the Emergency Nurses Training presentation at the Komfo Anokye Teaching Hospital (KATH) in May 2022, and presented on health practice and human rights at the Christian Health Association of Ghana (CHAG) Annual Conference at Sunyani in September 2021.",
-      "Before assuming his current role, he honed his litigation skills as an Associate at Owusu-Dapaa Law and Associates, and while at Cambridge served as a Legal Researcher for the Centre of Medical Law and Life Sciences. He currently serves as an Adjunct Lecturer at the GIMPA Law School, a Lecturer at the Faculty of Law, KNUST, and consults for the Centre for Human Rights, University of Pretoria, South Africa.",
+      "Ezekiel Osei is an Associate at SBA Legal Consult, Ahinsan-Kumasi. His areas of specialty include Corporate and Commercial Law, Corporate Insolvency Law, International Law, Competition Law, International Investment Law, Artificial Intelligence (AI) and Technology Governance, and Human Rights Law. This breadth of expertise enables him to advise clients not only on domestic disputes, but also on cross-border transactions, regulatory compliance, and the legal risks posed by emerging technologies.",
+      "Ezekiel obtained his Bachelor of Laws (LLB) degree with First Class Honours from the Kwame Nkrumah University of Science and Technology (KNUST), Kumasi, ranking third in a graduating class of 200. He then undertook his professional legal training at the Ghana School of Law. As a Chevening Scholar, he earned a Master of Laws (LLM) in Commercial Law with First Class Honours from the University of Cambridge, United Kingdom, where he graduated as the best student in the Commercial Law specialisation and ranked third out of 195 candidates overall. He was awarded the Faculty of Law Prizes in Competition Law and in Corporate Insolvency Law, as well as the Jeffrey W. Cook Prize in Law for the best-performing LLM student and the Johnston Prize for Postgraduate Studies, both awarded by Hughes Hall College. He is currently studying for a Doctor of Philosophy (PhD) in International Law at the University of Cambridge as a Cambridge Trust International Scholar. He is also an Affiliate Researcher at the Lauterpacht Centre for International Law, one of the world’s foremost centres for international law research.",
+      "Ezekiel was enrolled as a Barrister and Solicitor of the Supreme Court of Ghana in November 2022. He is a member of the Ghana Bar Association and of the Young International Arbitration Group, London. He began his practice at Owusu-Dapaa Law and Associates Ltd, Kumasi, where he trained as a pupil and later served as an Associate specialising in general and corporate litigation, before joining SBA Legal Consult. In the course of his practice, he has acted for institutions, companies, foreign investors, and individuals in corporate transactions, commercial litigation, debt settlement and restructuring arrangements, and mining and land compensation claims.",
+      "Alongside his practice, Ezekiel lectures in Public International Law and Company Law at the Faculty of Law, KNUST, and has taught International Trade and Investment Law and Advanced International Law at the GIMPA Law School. He is Co-Editor-in-Chief of the Cambridge Law Review and Managing Editor of the Cambridge International Law Journal. As a Contributing Editor of The Competition Brief, he co-directed the development of the first comprehensive database of African competition law jurisprudence. He is also a consultant to the Centre for Human Rights, University of Pretoria, South Africa. He has published widely in local and international journals on, among others, corporate law, creditor protection in liquidation, merger control under Ghanaian and ECOWAS law, and public international law.",
+      "Ezekiel is committed to bringing professionalism, rigorous research, sound judgment, and integrity to every matter he handles. He is dedicated to helping institutions, companies, and individuals resolve their legal challenges and protect their interests in an increasingly complex commercial, regulatory, and technological environment.",
     ],
   },
   {
     name: "Abena Frema Kyei-Baffour",
     title: "Associate",
     slug: "abena-frema-kyei-baffour",
-    image: "/portraits/abena_frema_kyei_baffuor.jpg",
+    alumniOf: ["Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
+    image: "/portraits/abena_frema_kyei_baffuor.webp",
     excerpt:
       "Client-focused practitioner advising individuals and institutions on disputes, medical law and corporate transactions.",
     focus: [
@@ -467,8 +572,13 @@ export const PEOPLE = [
 
 export const SITE = {
   name: "SBA Legal Consult",
-  heroHeading:
-    "A full-service law firm serving individuals and businesses across Ghana",
+  heroEyebrow: "SBA Legal Consult — Law firm in Kumasi, Ghana",
+  heroHeading: ["Sound law.", "Practical solutions."],
+  heroIntro:
+    "At SBA Legal Consult, we aim to turn sound legal principle into practical solutions that move our clients’ case forward.",
+  email: "chambers@sbalegalconsult.com",
+  // Official profiles only — footer icons and structured data use these. Empty until confirmed.
+  socials: [] as { label: "LinkedIn" | "Facebook" | "X"; href: string }[],
   phone1: "0543557244",
   phone2: "0322291474",
   address:

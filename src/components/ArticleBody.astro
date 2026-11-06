@@ -1,126 +1,114 @@
 ---
-// Renders Portable Text blocks (Sanity) and the identically-shaped mock bodies.
-// Supports: normal paragraphs, h2/h3, bullet + numbered lists, bold/italic marks.
-interface Span {
-  _type?: string;
-  text?: string;
-  marks?: string[];
-}
-interface Block {
-  _type?: string;
-  style?: string;
-  listItem?: "bullet" | "number";
-  children?: Span[];
-}
+// Renders Portable Text (Sanity) and the identically-shaped sample bodies with
+// astro-portabletext. Site-specific pieces live in ./portable-text/.
+import { PortableText } from "astro-portabletext";
+import Block from "./portable-text/Block.astro";
+import Mark from "./portable-text/Mark.astro";
+import Image from "./portable-text/Image.astro";
+import Table from "./portable-text/Table.astro";
+
 interface Props {
-  body?: Block[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: any[];
 }
 const { body = [] } = Astro.props;
-
-function inline(children: Span[] = []): string {
-  return children
-    .map((c) => {
-      const text = (c.text ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-      const marks = c.marks ?? [];
-      if (marks.includes("strong") && marks.includes("em")) return `<strong><em>${text}</em></strong>`;
-      if (marks.includes("strong")) return `<strong>${text}</strong>`;
-      if (marks.includes("em")) return `<em>${text}</em>`;
-      return text;
-    })
-    .join("");
-}
-
-type Node =
-  | { type: "para"; html: string }
-  | { type: "h2"; html: string }
-  | { type: "h3"; html: string }
-  | { type: "list"; ordered: boolean; items: string[] };
-
-// Group consecutive list items so each list renders as one <ul>/<ol>.
-const nodes: Node[] = [];
-for (const b of body) {
-  if (!b || b._type !== "block") continue;
-  if (b.listItem === "bullet" || b.listItem === "number") {
-    const ordered = b.listItem === "number";
-    const last = nodes[nodes.length - 1];
-    if (last && last.type === "list" && last.ordered === ordered) {
-      last.items.push(inline(b.children));
-    } else {
-      nodes.push({ type: "list", ordered, items: [inline(b.children)] });
-    }
-    continue;
-  }
-  const html = inline(b.children);
-  if (!html.trim()) continue;
-  if (b.style === "h2") nodes.push({ type: "h2", html });
-  else if (b.style === "h3") nodes.push({ type: "h3", html });
-  else nodes.push({ type: "para", html });
-}
+const components = { block: Block, mark: Mark, type: { image: Image, table: Table } };
 ---
 
 <div class="article-body">
-  {
-    nodes.map((n) => {
-      if (n.type === "h2")
-        return <h2 set:html={n.html} />;
-      if (n.type === "h3")
-        return <h3 set:html={n.html} />;
-      if (n.type === "list")
-        return n.ordered ? (
-          <ol>
-            {n.items.map((item) => (
-              <li set:html={item} />
-            ))}
-          </ol>
-        ) : (
-          <ul>
-            {n.items.map((item) => (
-              <li set:html={item} />
-            ))}
-          </ul>
-        );
-      return <p set:html={n.html} />;
-    })
-  }
+  <PortableText value={body} components={components} />
 </div>
 
 <style>
+  /* Elements come from child components, so rules reach them via :global(). */
   .article-body {
     color: #3a4454;
     font-size: 1rem;
     line-height: 1.75;
   }
-  .article-body > * + * {
+  .article-body > :global(* + *) {
     margin-top: 1.25rem;
   }
-  .article-body h2 {
+  .article-body :global(h2) {
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 600;
     color: #16233a;
     padding-top: 0.5rem;
   }
-  .article-body h3 {
+  .article-body :global(h3) {
     font-family: var(--font-display);
     font-size: 1.1rem;
     font-weight: 600;
     color: #16233a;
   }
-  .article-body ul {
+  .article-body :global(ul) {
     list-style: disc;
     padding-left: 1.5rem;
   }
-  .article-body ol {
+  .article-body :global(ol) {
     list-style: decimal;
     padding-left: 1.5rem;
   }
-  .article-body li + li {
+  .article-body :global(li > ul),
+  .article-body :global(li > ol),
+  .article-body :global(li + li) {
     margin-top: 0.5rem;
   }
-  .article-body strong {
+  .article-body :global(strong) {
     color: #16233a;
+  }
+  .article-body :global(a) {
+    color: #0f3d8e;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .article-body :global(a:hover) {
+    color: #0a2a63;
+  }
+  .article-body :global(code) {
+    background: #f4f6fa;
+    padding: 0.1rem 0.35rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+  }
+  .article-body :global(blockquote) {
+    border-left: 3px solid #0f3d8e;
+    padding-left: 1.25rem;
+    font-style: italic;
+    color: #16233a;
+  }
+  .article-body :global(.table-scroll) {
+    overflow-x: auto;
+    border: 1px solid #d9e1f0;
+  }
+  .article-body :global(table) {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .article-body :global(th),
+  .article-body :global(td) {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #d9e1f0;
+    text-align: left;
+    vertical-align: top;
+  }
+  .article-body :global(thead th) {
+    border-top: 0;
+    background: #f4f6fa;
+    color: #16233a;
+    font-weight: 600;
+  }
+  .article-body :global(tbody th) {
+    color: #16233a;
+    font-weight: 600;
+  }
+  .article-body :global(figure img) {
+    width: 100%;
+    height: auto;
   }
 </style>

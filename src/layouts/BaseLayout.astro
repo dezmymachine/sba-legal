@@ -4,77 +4,60 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 
+import { firmLd } from "../lib/schema";
+import { INDEXABLE } from "../lib/seo";
+
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  /** Extra schema.org nodes for this page (Person, Article, BreadcrumbList…). */
+  jsonLd?: Record<string, unknown>[];
+  /** Keep this page out of search results (e.g. 404). */
+  noindex?: boolean;
 }
 const {
-  title = "SBA Legal Consult | Full-Service Law Firm in Kumasi, Ghana",
-  description = "A full-service law firm serving individuals and businesses across Ghana. Corporate law, oil & gas, property, immigration, and more — based in Kumasi, Ashanti.",
+  title = "SBA Legal Consult | Law Firm in Kumasi, Ghana",
+  description = "SBA Legal Consult is a law firm in Kumasi, Ghana, advising on corporate and commercial law, mining, oil and gas, insolvency, property, immigration and disputes.",
   ogImage = "/og-default.jpg",
+  jsonLd = [],
+  noindex = false,
 } = Astro.props;
 
-const canonicalURL = Astro.url;
+const site = Astro.site!;
+const canonicalURL = new URL(Astro.url.pathname, site);
+// Social cards need absolute image URLs.
+const ogImageURL = new URL(ogImage, site).toString();
+const robots = !INDEXABLE || noindex ? "noindex, nofollow" : null;
 
-const jsonLd = {
+const graph = {
   "@context": "https://schema.org",
-  "@type": "LegalService",
-  name: "SBA Legal Consult",
-  description:
-    "A full-service law firm serving individuals and businesses across Ghana, specialising in corporate and commercial law, oil and gas, mining, property law, immigration, and more.",
-  url: "https://sbalegalconsult.com",
-  telephone: ["+233543557244", "+233322291474"],
-  address: {
-    "@type": "PostalAddress",
-    streetAddress:
-      "2nd Floor, JP Station Building, Off J.K. Acheampong Ave, Ahinsan Estate",
-    addressLocality: "Kumasi",
-    addressRegion: "Ashanti",
-    addressCountry: "GH",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 6.6885,
-    longitude: -1.6244,
-  },
-  areaServed: {
-    "@type": "Country",
-    name: "Ghana",
-  },
-  knowsAbout: [
-    "Corporate and Commercial Law",
-    "Oil and Gas Law",
-    "Mining Law",
-    "Insolvency and Restructuring",
-    "Foreign Direct Investment",
-    "Property Law",
-    "Medical Law",
-    "Immigration and Nationality",
-  ],
-  foundingDate: "2025",
-  priceRange: "$$",
+  "@graph": [firmLd(site), ...jsonLd],
 };
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-GH">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0A2A63" />
 
     <!-- Primary SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    {robots && <meta name="robots" content={robots} />}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogImageURL} />
     <meta property="og:site_name" content="SBA Legal Consult" />
     <meta property="og:locale" content="en_GH" />
 
@@ -82,10 +65,10 @@ const jsonLd = {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={ogImageURL} />
 
     <!-- Structured data -->
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 
     <!-- Fonts — preconnect first, then non-blocking stylesheet load -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

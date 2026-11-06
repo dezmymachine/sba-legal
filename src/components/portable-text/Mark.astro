@@ -1,0 +1,25 @@
+---
+// Marks for article bodies: links are vetted and open external sites in a new
+// tab; every other mark (bold, italic, code, underline, strike) uses the default.
+import type { MarkProps } from "astro-portabletext/types";
+import { Mark as DefaultMark } from "astro-portabletext/components";
+
+type Props = MarkProps<{ href?: string }>;
+const { node } = Astro.props;
+const isLink = node.markType === "link";
+// Only web, mail, phone and on-site links — never javascript: and friends.
+const raw = isLink ? (node.markDef.href ?? "").trim() : "";
+const href = /^(https?:|mailto:|tel:|\/|#)/i.test(raw) ? raw : null;
+const external = !!href && /^https?:/i.test(href);
+---
+{
+  isLink ? (
+    href ? (
+      <a href={href} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}><slot /></a>
+    ) : (
+      <slot />
+    )
+  ) : (
+    <DefaultMark {...Astro.props}><slot /></DefaultMark>
+  )
+}

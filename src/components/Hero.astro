@@ -14,6 +14,8 @@ import LearnMore from "./LearnMore.astro";
       HERO_SLIDES.map((slide, i) => (
         <img
           src={slide.src}
+          width="1920"
+          height="1280"
           alt={slide.alt}
           loading={i === 0 ? "eager" : "lazy"}
           fetchpriority={i === 0 ? "high" : undefined}
@@ -28,12 +30,20 @@ import LearnMore from "./LearnMore.astro";
   <div
     class="mx-auto flex min-h-[78vh] max-w-7xl flex-col justify-center px-4 py-24 sm:px-6"
   >
-    <h1
-      id="hero-headline"
-      class="font-display max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
-    >
-      {SITE.heroHeading}
-    </h1>
+    <div id="hero-headline">
+      {/* The H1 names the firm and what/where it is; the slogan is display copy. */}
+      <h1 class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+        {SITE.heroEyebrow}
+      </h1>
+      <p
+        class="font-display mt-4 max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
+      >
+        {SITE.heroHeading.map((line, i) => <>{i > 0 && " "}<span class="block">{line}</span></>)}
+      </p>
+      <p class="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
+        {SITE.heroIntro}
+      </p>
+    </div>
     <div id="hero-cta" class="mt-8">
       <LearnMore href="/about" dark />
     </div>

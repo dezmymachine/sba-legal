@@ -1,13 +1,55 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
+import LearnMore from "../components/LearnMore.astro";
+import { SERVICES } from "../data/content";
 ---
 <BaseLayout
   title="Expertise | SBA Legal Consult"
-  description="Explore the practice areas of SBA Legal Consult — corporate and commercial, oil and gas, mining, insolvency, property, medical law, immigration, and more."
+  description="Practice areas of SBA Legal Consult, Kumasi: mining, oil and gas, corporate, insolvency, investment, international, medical, immigration, property and disputes."
 >
   <PageHero
     title="Our Expertise"
-    images={["/backgrounds/28337.jpg"]}
+    images={["/backgrounds/28337.webp"]}
   />
+
+  <section class="bg-white" aria-labelledby="services-heading">
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+      <h2 id="services-heading" class="sr-only">Our services</h2>
+      <p class="scroll-reveal max-w-3xl text-lg leading-relaxed text-[#16233A]">
+        We advise local and international clients on matters where law, business
+        and regulation meet, and give advice that is clear, practical and ready
+        to act on.
+      </p>
+
+      <ol class="mt-12 border-t border-[#D9E1F0]">
+        {SERVICES.map((s, i) => (
+          <li
+            id={s.slug}
+            class="scroll-reveal grid scroll-mt-24 gap-3 border-b border-[#D9E1F0] py-8 md:grid-cols-[4rem_minmax(0,2fr)_minmax(0,3fr)] md:gap-8"
+          >
+            <span class="text-sm font-semibold text-[#0F3D8E]" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3 class="font-display text-xl font-semibold text-[#16233A]">
+              <a href={`/expertise/${s.slug}`} class="hover:text-[#0F3D8E]">{s.title}</a>
+            </h3>
+            <div>
+              <p class="text-base leading-relaxed text-slate-600">{s.description}</p>
+              <a href={`/expertise/${s.slug}`} class="mt-2 inline-block text-sm font-semibold text-[#0F3D8E] hover:text-[#0A2A63]" aria-label={`More about ${s.title}`}>Learn more</a>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div class="scroll-reveal mt-12 border border-[#D9E1F0] bg-[#F4F6FA] p-8">
+        <p class="text-base leading-relaxed text-[#16233A]">
+          Need advice on a matter in one of these areas? Speak to our chambers.
+        </p>
+        <div class="mt-4">
+          <LearnMore href="/contact" label="Contact us" />
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
