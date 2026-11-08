@@ -22,12 +22,16 @@ const components = { block: Block, mark: Mark, type: { image: Image, table: Tabl
 <style>
   /* Elements come from child components, so rules reach them via :global(). */
   .article-body {
+    /* Same reading measure as .prose-sba (global.css); wide blocks opt out below. */
+    max-width: 65ch;
     color: #3a4454;
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+    line-height: 1.75;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
   }
   .article-body > :global(* + *) {
-    margin-top: 1.25rem;
+    margin-top: 1.5em;
   }
   .article-body :global(h2) {
     font-family: var(--font-display);

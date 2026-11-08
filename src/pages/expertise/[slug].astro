@@ -26,7 +26,7 @@ const description = fullDescription.length <= 160 ? fullDescription : service.de
   <PageHero title={service.title} eyebrow="Expertise" images={["/backgrounds/28337.webp"]} />
 
   <section class="bg-white" aria-labelledby="service-heading">
-    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-20">
       <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
         <ol class="flex flex-wrap items-center gap-2">
           <li><a href="/" class="hover:text-[#07678F]">Home</a></li>
@@ -38,18 +38,20 @@ const description = fullDescription.length <= 160 ? fullDescription : service.de
       </nav>
 
       <div class="mt-10">
-        <div class="min-w-0 max-w-3xl">
+        <div class="min-w-0">
           <h2 id="service-heading" class="sr-only">About this practice area</h2>
-          <p class="scroll-reveal t-lead text-[#16233A]">
+          <div class="prose-sba">
+          <p class="scroll-reveal prose-lead">
             {service.description}
           </p>
           {service.body?.map((para) => (
-            <p class="mt-4 t-body text-slate-600">{para}</p>
+            <p>{para}</p>
           ))}
-          <p class="mt-4 t-body text-slate-600">
+          <p>
             SBA Legal Consult advises individuals, businesses and institutions from
             our offices in Ahinsan Estate, Kumasi, and acts for clients across Ghana.
           </p>
+          </div>
           <div class="mt-10">
             <p class="t-body text-[#16233A]">Need advice on {service.title}?</p>
             <a

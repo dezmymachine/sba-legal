@@ -93,13 +93,13 @@ const heroImage = "/backgrounds/62.webp";
   </section>
 
   <section class="bg-white" aria-label={`Profile of ${person.name}`}>
-    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+    <div class="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-20">
       <div class="grid gap-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-16">
         <div class="scroll-reveal">
           <h2 class="t-eyebrow text-[#07678F]">Profile</h2>
-          <div class="mt-6 max-w-2xl space-y-6 border-t border-[#D3E3EA] pt-8">
+          <div class="prose-sba mt-6 border-t border-[#D3E3EA] pt-8">
             {person.bio?.map((para: string, i: number) => (
-              <p class={i === 0 ? "t-lead text-[#16233A]" : "t-body text-slate-600"}>{para}</p>
+              <p class={i === 0 ? "prose-lead" : undefined}>{para}</p>
             ))}
           </div>
         </div>

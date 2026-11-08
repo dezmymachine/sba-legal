@@ -25,6 +25,25 @@
 @utility t-small { font-size: 0.875rem; line-height: 1.6; }
 @utility t-eyebrow { font-size: 0.75rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
 
+/* ── Long-form text (design rule) ─────────────────────────────────────────────
+   Any multi-paragraph copy (bios, practice pages, about, articles) uses
+   .prose-sba: ~65-character measure, 17–19px type, 1.75 line-height,
+   1.5em between paragraphs, left-aligned, underlined links. Modelled on
+   The Verge's article text. Do not set paragraph size/spacing by hand.        */
+.prose-sba {
+  max-width: 65ch;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.75;
+  color: var(--color-brand-body);
+  text-align: left;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+.prose-sba > * + * { margin-top: 1.5em; }
+.prose-sba .prose-lead { font-size: 1.15em; line-height: 1.65; color: var(--color-brand-ink); }
+.prose-sba a { color: var(--color-brand); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.prose-sba a:hover { color: var(--color-brand-deep); }
+
 html {
   scroll-behavior: smooth;
 }
