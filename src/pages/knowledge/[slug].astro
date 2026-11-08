@@ -10,6 +10,7 @@ import {
   KIND_LABELS,
 } from "../../lib/sanity";
 import { articleLd, breadcrumbLd } from "../../lib/schema";
+import { PEOPLE, SERVICES, serviceForFocus } from "../../data/content";
 
 // Static detail pages backed by local content today, Sanity tomorrow:
 // slugs come from Sanity when credentials are set, mocks otherwise.
@@ -34,6 +35,8 @@ const latest = (await getArticles()).filter(
 );
 const recommended = [...sameKind, ...latest].slice(0, 3);
 
+const authorFocus = PEOPLE.find((p) => p.slug === article.author?.slug)?.focus ?? [];
+const relatedServices = [...new Set(authorFocus.map(serviceForFocus).filter(Boolean))] as typeof SERVICES;
 // Long headlines already fill the ~60-char SERP title; skip the brand suffix then.
 const title = article.seoTitle ?? (article.title.length > 45 ? article.title : `${article.title} | SBA Legal Consult`);
 ---
@@ -41,6 +44,9 @@ const title = article.seoTitle ?? (article.title.length > 45 ? article.title : `
   title={title}
   description={article.seoDescription ?? article.excerpt ?? article.title}
   ogImage={article.heroImage ?? "/og-default.jpg"}
+  ogType="article"
+  publishedTime={article.date}
+  ogImageAlt={article.title}
   jsonLd={[
     articleLd(article, Astro.site!),
     breadcrumbLd([["Home", "/"], ["Knowledge Centre", "/knowledge/"], [article.title, `/knowledge/${article.slug}/`]], Astro.site!),
@@ -68,7 +74,12 @@ const title = article.seoTitle ?? (article.title.length > 45 ? article.title : `
       <h1 class="font-display mt-3 max-w-3xl t-h1 text-white">
         {article.title}
       </h1>
-      <p class="mt-4 text-sm text-white/75">{formatDate(article.date)}</p>
+      <p class="mt-4 text-sm text-white/75">
+        {article.author && (
+          <>By <a href={`/people/${article.author.slug}/`} class="font-medium underline underline-offset-2 hover:text-white">{article.author.name}</a>, {article.author.title} · </>
+        )}
+        <time datetime={article.date}>{formatDate(article.date)}</time>
+      </p>
     </div>
   </section>
 
@@ -96,6 +107,14 @@ const title = article.seoTitle ?? (article.title.length > 45 ? article.title : `
             </svg>
             <span>Back to Knowledge Centre</span>
           </a>
+          {relatedServices.length > 0 && (
+            <p class="mt-8 text-sm text-slate-600">
+              Related practice {relatedServices.length > 1 ? "areas" : "area"}:
+              {relatedServices.map((s, i) => (
+                <>{i > 0 ? ", " : " "}<a href={`/expertise/${s.slug}/`} class="font-medium text-[#07678F] underline underline-offset-2">{s.title}</a></>
+              ))}
+            </p>
+          )}
         </div>
 
         {/* Author sidebar — rendered only when an author is set (optional for events) */}

@@ -126,7 +126,7 @@ export const SERVICES: {
     description:
       "Land acquisition, title searches, registration, leases, conveyancing, and land disputes.",
     image: "/images/practice-property-law.webp",
-    alt: "Modern apartment building beside a city street",
+    alt: "Apartment buildings with balconies under a cloudy sky",
   },
   {
     title: "Litigation and ADR",
@@ -586,6 +586,57 @@ export const PEOPLE: {
   },
 ];
 
+// DRAFT — pending review by the firm's lawyers before the site goes live. Kept general
+// (process and "what to expect") on purpose; no statute citations, fees or timelines.
+// Rendered on /expertise/<slug> and emitted as FAQPage JSON-LD.
+export const SERVICE_FAQS: Record<string, { q: string; a: string }[]> = {
+  "mining-oil-gas": [
+    { q: "What does a mining or oil and gas lawyer in Ghana do?", a: "A mining or oil and gas lawyer advises on licensing, regulatory compliance, local content requirements and the agreements that govern extractive projects. At SBA Legal Consult in Kumasi, we help companies and investors understand their obligations and document their deals." },
+    { q: "Do I need legal advice before applying for a mineral or petroleum licence?", a: "Yes, it is sensible to take advice early. The licensing stage sets the rights, conditions and obligations that will apply to the project, so mistakes made at application are costly to correct later." },
+    { q: "Can SBA Legal Consult help with agreements between operators, investors and communities?", a: "We advise on and prepare the agreements used across the extractive sector. Contact our chambers with the outline of your project and we will confirm how we can help." },
+  ],
+  "corporate-commercial": [
+    { q: "What corporate and commercial legal services does SBA Legal Consult offer?", a: "We advise on company formation and governance, commercial contracts and transactions for businesses and individuals across Ghana, from our offices in Kumasi." },
+    { q: "When should a business have its contracts reviewed by a lawyer?", a: "Before signing, particularly for agreements that are long-term, high-value or hard to exit. A review identifies risks and unclear terms while they can still be negotiated." },
+    { q: "Do you act for both local and foreign businesses?", a: "Yes. We advise local and international clients on matters where law, business and regulation meet." },
+  ],
+  "insolvency-restructuring": [
+    { q: "What is insolvency and restructuring advice?", a: "It is legal advice for companies and creditors dealing with financial distress: understanding the options available, the duties of directors, and how a business might be restructured, rescued or wound up." },
+    { q: "Should directors take legal advice when a company is in financial difficulty?", a: "Yes. Directors owe duties that become more demanding when a company is struggling, and early advice gives more options than late advice." },
+    { q: "Do you advise creditors as well as companies?", a: "Yes. Creditors can take advice on recovering what they are owed and on their position if a debtor becomes insolvent." },
+  ],
+  "foreign-direct-investment": [
+    { q: "What legal support do foreign investors need to invest in Ghana?", a: "Foreign investors typically need advice on the right business structure, regulatory approvals and the contracts that protect their investment. We help international clients navigate these steps from our base in Kumasi." },
+    { q: "Can you help before an investor has decided to enter the Ghanaian market?", a: "Yes. Early advice on structure, regulation and risk helps an investor decide whether and how to proceed." },
+    { q: "Do you work with local partners and advisers?", a: "We act as local counsel in Ghana and can coordinate with an investor's other advisers." },
+  ],
+  "international-law": [
+    { q: "What does SBA Legal Consult advise on in international law?", a: "We advise on matters with a cross-border element, including international commercial and legal questions affecting Ghanaian and foreign clients." },
+    { q: "When does a matter involve international law?", a: "When parties, assets or obligations sit in more than one country, or when treaties or foreign rules may apply. A short consultation can confirm which rules are relevant." },
+    { q: "Can you act as local counsel for overseas clients?", a: "Yes. Contact our chambers with the details and we will confirm how we can assist." },
+  ],
+  "medical-law": [
+    { q: "What is medical law?", a: "Medical law covers the legal rights and responsibilities of patients, healthcare professionals and healthcare providers, including consent, standards of care and regulation." },
+    { q: "Who do you advise in medical law matters?", a: "We advise both healthcare providers and individuals, depending on the matter. Contact our chambers to discuss your situation." },
+    { q: "Where can I read more about medical law issues?", a: "Our Knowledge Centre carries articles on healthcare law, including negligence and the responsibilities of healthcare providers." },
+  ],
+  "immigration-nationality": [
+    { q: "What immigration and nationality services does SBA Legal Consult offer?", a: "We advise individuals, families and businesses on immigration and nationality matters affecting Ghana, including how to approach applications and what documents are needed." },
+    { q: "Why use a lawyer for an immigration or nationality application?", a: "Applications depend on accurate documents and the right category of application. A lawyer helps avoid errors and delays and advises when circumstances are complex." },
+    { q: "Can businesses use your immigration advice for foreign staff?", a: "Yes. We advise employers who need to bring in or retain foreign staff. Contact our chambers with the details." },
+  ],
+  "property-law": [
+    { q: "What property law services do you provide in Kumasi?", a: "We advise on buying, selling and leasing land and buildings, and on the checks that should be done before committing to a property transaction." },
+    { q: "Why is due diligence important when buying property in Ghana?", a: "Due diligence confirms who owns the property, whether the seller can sell it and whether anyone else has a claim. Skipping it is one of the most common causes of property disputes. See our article on property due diligence in Kumasi." },
+    { q: "Can you act for developers and investors as well as individual buyers?", a: "Yes, we act for individuals, businesses and investors in property matters." },
+  ],
+  "litigation-adr": [
+    { q: "What is the difference between litigation and ADR?", a: "Litigation resolves a dispute in court. Alternative dispute resolution (ADR), such as mediation or arbitration, resolves it outside court, often faster and more privately." },
+    { q: "How do I know whether to go to court or use ADR?", a: "It depends on the dispute, the relationship between the parties and any contract terms about how disputes are resolved. We advise on the options at the outset." },
+    { q: "How can I start a consultation about a dispute?", a: "Contact our chambers by phone, email or the contact form with a brief summary and we will advise on next steps." },
+  ],
+};
+
 export const SITE = {
   name: "SBA Legal Consult",
   heroHeading: ["Sound law.", "Practical solutions."],
@@ -605,3 +656,6 @@ export const SITE = {
   geo: { latitude: 6.67088, longitude: -1.59083 },
   mapEmbed: "https://www.google.com/maps?q=MCC5+9M3+SBA+LEGAL+CONSULT+PRUC,+Kumasi&output=embed",
 };
+
+/** Local number (0543557244) as an international tel: number (+233543557244). */
+export const intlPhone = (local: string) => `+233${local.substring(1)}`;

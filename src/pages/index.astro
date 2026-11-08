@@ -7,7 +7,10 @@ import KnowledgeCentre from "../components/KnowledgeCentre.astro";
 import PeopleGrid from "../components/PeopleGrid.astro";
 import { websiteLd } from "../lib/schema";
 ---
-<BaseLayout jsonLd={[websiteLd(Astro.site!)]}>
+<BaseLayout
+  title="SBA Legal Consult | Law Firm in Kumasi, Ghana: Corporate, Mining, Property & Immigration"
+  description="SBA Legal Consult is a full-service law firm in Kumasi, Ghana, serving individuals and businesses across Ghana. Sound law, practical solutions."
+  jsonLd={[websiteLd(Astro.site!)]}>
   <Hero />
   <AboutSnippet />
   <PracticeAreas />

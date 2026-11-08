@@ -1,6 +1,6 @@
 // Schema.org JSON-LD builders. BaseLayout always emits the firm; pages pass extra
 // nodes (Person, Article, Service, BreadcrumbList…) that point back to it by @id.
-import { PEOPLE, SERVICES, SITE } from "../data/content";
+import { intlPhone, PEOPLE, SERVICES, SITE } from "../data/content";
 
 type Node = Record<string, unknown>;
 
@@ -20,17 +20,32 @@ export function firmLd(site: URL): Node {
     logo: abs("/logo.png", site),
     image: abs("/og-default.jpg", site),
     email: SITE.email,
-    telephone: [SITE.phone1, SITE.phone2].map((p) => `+233${p.substring(1)}`),
+    telephone: [SITE.phone1, SITE.phone2].map(intlPhone),
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: intlPhone(SITE.phone1),
+      email: SITE.email,
+      areaServed: "GH",
+      availableLanguage: "English",
+    },
+    hasMap: SITE.mapEmbed.replace("&output=embed", ""),
     address: {
       "@type": "PostalAddress",
       streetAddress: "2nd Floor, JP Station, Ahinsan Estate",
+      // Ghana Post Digital Address
+      postalCode: SITE.gps,
       postOfficeBoxNumber: "UP 824",
       addressLocality: "Kumasi",
       addressRegion: "Ashanti",
       addressCountry: "GH",
     },
     geo: { "@type": "GeoCoordinates", ...SITE.geo },
-    areaServed: { "@type": "Country", name: "Ghana" },
+    areaServed: [
+      { "@type": "City", name: "Kumasi" },
+      { "@type": "AdministrativeArea", name: "Ashanti Region" },
+      { "@type": "Country", name: "Ghana" },
+    ],
     foundingDate: "2025",
     ...(managingPartner && { founder: { "@id": personId(managingPartner.slug, site) } }),
     employee: PEOPLE.map((p) => ({ "@id": personId(p.slug, site) })),
@@ -65,6 +80,7 @@ export function personLd(person: (typeof PEOPLE)[number], site: URL): Node {
     name: person.name,
     jobTitle: person.title,
     url: abs(`/people/${person.slug}/`, site),
+    ...(person.excerpt && { description: person.excerpt }),
     ...(person.email && { email: person.email }),
     image: abs(person.image, site),
     worksFor: { "@id": firmId(site) },
@@ -90,7 +106,7 @@ export function serviceLd(service: (typeof SERVICES)[number], site: URL): Node {
 }
 
 export function articleLd(
-  article: { title: string; slug: string; date: string; excerpt?: string; heroImage?: string; author: { slug: string } | null },
+  article: { title: string; slug: string; date: string; modified?: string; excerpt?: string; heroImage?: string; author: { slug: string } | null },
   site: URL
 ): Node {
   const url = abs(`/knowledge/${article.slug}/`, site);
@@ -100,11 +116,24 @@ export function articleLd(
     headline: article.title,
     ...(article.excerpt && { description: article.excerpt }),
     datePublished: article.date,
+    dateModified: article.modified ?? article.date,
     ...(article.heroImage && { image: abs(article.heroImage, site) }),
     ...(article.author && { author: { "@id": personId(article.author.slug, site) } }),
     publisher: { "@id": firmId(site) },
     mainEntityOfPage: url,
     inLanguage: "en-GH",
+  };
+}
+
+export function faqLd(faqs: { q: string; a: string }[], pageUrl: string): Node {
+  return {
+    "@type": "FAQPage",
+    "@id": `${pageUrl}#faq`,
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
   };
 }
 

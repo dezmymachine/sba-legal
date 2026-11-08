@@ -2,8 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import LearnMore from "../../components/LearnMore.astro";
-import { SERVICES } from "../../data/content";
-import { breadcrumbLd, serviceLd } from "../../lib/schema";
+import { SERVICES, SERVICE_FAQS } from "../../data/content";
+import { getArticlesForService, formatDate, KIND_LABELS } from "../../lib/sanity";
+import { breadcrumbLd, faqLd, serviceLd } from "../../lib/schema";
 
 export function getStaticPaths() {
   return SERVICES.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -12,6 +13,8 @@ export function getStaticPaths() {
 const { service } = Astro.props;
 const others = SERVICES.filter((s) => s.slug !== service.slug);
 const path = `/expertise/${service.slug}/`;
+const related = (await getArticlesForService(service)).slice(0, 3);
+const faqs = SERVICE_FAQS[service.slug] ?? [];
 const fullDescription = `${service.description} ${service.title} advice from SBA Legal Consult, Kumasi.`;
 const description = fullDescription.length <= 160 ? fullDescription : service.description;
 ---
@@ -20,6 +23,7 @@ const description = fullDescription.length <= 160 ? fullDescription : service.de
   description={description}
   jsonLd={[
     serviceLd(service, Astro.site!),
+    ...(faqs.length ? [faqLd(faqs, new URL(path, Astro.site!).toString())] : []),
     breadcrumbLd([["Home", "/"], ["Expertise", "/expertise/"], [service.title, path]], Astro.site!),
   ]}
 >
@@ -52,6 +56,22 @@ const description = fullDescription.length <= 160 ? fullDescription : service.de
             our offices in Ahinsan Estate, Kumasi, and acts for clients across Ghana.
           </p>
           </div>
+          {faqs.length > 0 && (
+            <div class="mt-14">
+              <h2 class="font-display t-h2 text-[#16233A]">Frequently asked questions</h2>
+              <div class="mt-6 border-b border-slate-400/70">
+                {faqs.map((f) => (
+                  <details class="faq group border-t border-slate-400/70">
+                    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-1 py-5 text-lg font-medium text-[#16233A] hover:text-[#07678F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#07678F] sm:px-5 [&::-webkit-details-marker]:hidden">
+                      <h3 class="font-medium">{f.q}</h3>
+                      <span aria-hidden="true" class="shrink-0 text-2xl leading-none transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p class="max-w-[65ch] px-1 pb-6 text-[17px] leading-[1.75] text-slate-700 sm:px-5">{f.a}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          )}
           <div class="mt-10">
             <p class="t-body text-[#16233A]">Need advice on {service.title}?</p>
             <a
@@ -65,6 +85,22 @@ const description = fullDescription.length <= 160 ? fullDescription : service.de
         </div>
 
       </div>
+
+      {related.length > 0 && (
+        <div class="mt-16 border-t border-[#D3E3EA] pt-10">
+          <h2 class="font-display t-h2 text-[#16233A]">Related insights</h2>
+          <ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((a) => (
+              <li>
+                <a href={`/knowledge/${a.slug}/`} class="group block">
+                  <p class="text-sm text-slate-500">{KIND_LABELS[a.kind].singular} · {formatDate(a.date)}</p>
+                  <p class="mt-1 t-card text-[#16233A] group-hover:text-[#07678F]">{a.title}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div class="mt-16 border-t border-[#D3E3EA] pt-10">
         <h2 class="font-display t-h2 text-[#16233A]">Other practice areas</h2>

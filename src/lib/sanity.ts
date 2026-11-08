@@ -41,6 +41,8 @@ export interface Article {
   slug: string;
   kind: KnowledgeKind;
   date: string;
+  /** Last edit (Sanity `_updatedAt`), for schema dateModified. */
+  modified?: string;
   excerpt?: string;
   /** Optional search-result overrides set in the studio. */
   seoTitle?: string;
@@ -92,7 +94,7 @@ function normalizeMock(a: any): Article {
 const byDateDesc = (a: Article, b: Article) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0);
 
 // Image fields stay raw in GROQ so urlFor() can apply crop + hotspot.
-const ARTICLE_FIELDS = `title, "slug": slug.current, kind, date, excerpt, seoTitle, seoDescription, heroImage, "author": author->{name, title, "slug": slug.current, photo}`;
+const ARTICLE_FIELDS = `title, "slug": slug.current, kind, date, "modified": _updatedAt, excerpt, seoTitle, seoDescription, heroImage, "author": author->{name, title, "slug": slug.current, photo}`;
 
 type SanityArticle = Omit<Article, "heroImage" | "author"> & {
   heroImage?: SanityImageSource;
@@ -121,7 +123,13 @@ function fromSanityArticle({ heroImage, author, ...rest }: SanityArticle): Artic
 // broken fetch can't ship sample content — Cloudflare keeps serving the last good
 // deploy. In `astro dev` a network blip falls back to the samples with a warning.
 async function fromSanity<T>(load: (c: SanityClient) => Promise<T>, sample: () => T): Promise<T> {
-  if (!client) return sample();
+  if (!client) {
+    // Sample posts are placeholders: never let a Cloudflare build publish them as real.
+    if (process.env.CF_PAGES || process.env.WORKERS_CI) {
+      throw new Error("PUBLIC_SANITY_PROJECT_ID is not set: refusing to publish sample knowledge posts. Set it in Cloudflare build variables.");
+    }
+    return sample();
+  }
   try {
     return await load(client);
   } catch (err) {
@@ -182,6 +190,17 @@ export function getArticle(slug: string): Promise<Article | null> {
 
 // People pages are managed in code (PEOPLE); Sanity `person` docs exist only so
 // articles can reference an author.
+/** Articles written by someone whose focus areas include this service. */
+export async function getArticlesForService(service: { keywords: string[] }): Promise<Article[]> {
+  const all = (await Promise.all((["publication", "news", "event"] as const).map(getArticlesByKind))).flat();
+  return all
+    .filter((a) => {
+      const focus = PEOPLE.find((p) => p.slug === a.author?.slug)?.focus ?? [];
+      return focus.some((f) => service.keywords.some((k) => f.toLowerCase().includes(k.toLowerCase())));
+    })
+    .sort(byDateDesc);
+}
+
 export async function getPeople() {
   return PEOPLE;
 }

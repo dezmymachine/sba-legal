@@ -1,11 +1,11 @@
 import type { APIRoute } from "astro";
 import { INDEXABLE } from "../lib/seo";
 
-// Answer engines that cite and link back are allowed explicitly; everything else
-// (including AI training crawlers) falls under `*`. To opt out of training, add
-// e.g. `User-agent: GPTBot` / `User-agent: Google-Extended` / `User-agent: ClaudeBot`
-// groups with `Disallow: /`.
-const AI_SEARCH_BOTS = ["OAI-SearchBot", "ChatGPT-User", "PerplexityBot", "Claude-SearchBot", "Claude-User"];
+// Policy (decided 2026-11-08): allow everything, including AI training crawlers, so the
+// firm can appear in AI answers. Listed explicitly so the choice is deliberate. To opt out
+// of training later, move GPTBot / ClaudeBot / Google-Extended to a `Disallow: /` group.
+const AI_SEARCH_BOTS = ["OAI-SearchBot", "ChatGPT-User", "PerplexityBot", "Perplexity-User", "Claude-SearchBot", "Claude-User", "meta-webindexer"];
+const AI_TRAINING_BOTS = ["GPTBot", "ClaudeBot", "Google-Extended", "Applebot-Extended"];
 
 export const GET: APIRoute = ({ site }) => {
   const body = INDEXABLE
@@ -14,6 +14,9 @@ export const GET: APIRoute = ({ site }) => {
         "Allow: /",
         "",
         ...AI_SEARCH_BOTS.map((bot) => `User-agent: ${bot}`),
+        "Allow: /",
+        "",
+        ...AI_TRAINING_BOTS.map((bot) => `User-agent: ${bot}`),
         "Allow: /",
         "",
         `Sitemap: ${new URL("sitemap-index.xml", site)}`,

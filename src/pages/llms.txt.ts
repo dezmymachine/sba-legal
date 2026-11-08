@@ -36,6 +36,9 @@ export const GET: APIRoute = async ({ site }) => {
       : []),
     "## Optional",
     `- [About the firm](${url("/about/")})`,
+    `- [Expertise overview](${url("/expertise/")})`,
+    `- [Our people](${url("/people/")})`,
+    `- [Contact](${url("/contact/")})`,
     `- [Join us](${url("/join-us/")}): applications from interns, pupils, associates and staff`,
     "",
   ];
