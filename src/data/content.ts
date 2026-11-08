@@ -62,9 +62,8 @@ export const SERVICES: {
     keywords: ["Mining", "Oil and Gas"],
     description:
       "Licensing, regulatory compliance, local content requirements, and agreements across the extractive sector.",
-    image:
-      "/images/practice-energy.webp",
-    alt: "Energy infrastructure at dusk",
+    image: "/images/practice-mining-oil-gas.webp",
+    alt: "Excavators and haul trucks working in an open-pit mine",
   },
   {
     title: "Corporate and Commercial Law",
@@ -72,9 +71,8 @@ export const SERVICES: {
     keywords: ["Corporate"],
     description:
       "Company formation, corporate governance, commercial contracts, and mergers and acquisitions.",
-    image:
-      "/images/practice-corporate.webp",
-    alt: "Glass corporate building",
+    image: "/images/practice-corporate-commercial.webp",
+    alt: "Hands holding a contract with a pen, ready to sign",
   },
   {
     title: "Insolvency and Restructuring",
@@ -82,6 +80,8 @@ export const SERVICES: {
     keywords: ["Insolvency"],
     description:
       "Business rescue, administration, liquidation, and debt restructuring for companies and creditors.",
+    image: "/images/practice-insolvency-restructuring.webp",
+    alt: "Financial report, calculator and pen on a desk",
   },
   {
     title: "Foreign Direct Investment",
@@ -89,6 +89,8 @@ export const SERVICES: {
     keywords: ["Investment"],
     description:
       "Structuring market entry, investment registration, incentives, and protections for foreign investors.",
+    image: "/images/practice-foreign-direct-investment.webp",
+    alt: "Aerial view of a container port with cranes and cargo ships",
   },
   {
     title: "International Law",
@@ -96,6 +98,8 @@ export const SERVICES: {
     keywords: ["International"],
     description:
       "Cross-border transactions, treaty-related questions, and matters involving more than one legal system.",
+    image: "/images/practice-international-law.webp",
+    alt: "Rows of national flags leading to the United Nations building in Geneva",
   },
   {
     title: "Medical Law",
@@ -103,6 +107,8 @@ export const SERVICES: {
     keywords: ["Medical"],
     description:
       "Regulation of health practitioners and facilities, patients’ rights, consent, and professional liability.",
+    image: "/images/practice-medical-law.webp",
+    alt: "Doctor in a white coat with a stethoscope writing on a clipboard",
   },
   {
     title: "Immigration and Nationality",
@@ -110,9 +116,8 @@ export const SERVICES: {
     keywords: ["Immigration"],
     description:
       "Work and residence permits, citizenship, dual nationality, and the right of abode for Ghanaians abroad and foreign nationals.",
-    image:
-      "/images/practice-immigration.webp",
-    alt: "Airplane wing above clouds",
+    image: "/images/practice-immigration-nationality.webp",
+    alt: "Passenger aircraft on the apron at an airport at sunset",
   },
   {
     title: "Property Law",
@@ -120,9 +125,8 @@ export const SERVICES: {
     keywords: ["Property"],
     description:
       "Land acquisition, title searches, registration, leases, conveyancing, and land disputes.",
-    image:
-      "/images/practice-property.webp",
-    alt: "Property keys and house model",
+    image: "/images/practice-property-law.webp",
+    alt: "Modern apartment building beside a city street",
   },
   {
     title: "Litigation and ADR",
@@ -130,6 +134,8 @@ export const SERVICES: {
     keywords: ["Litigation", "Dispute"],
     description:
       "Representation in civil and criminal disputes before the courts, and resolution of disputes through arbitration, mediation and negotiation.",
+    image: "/images/practice-litigation-adr.webp",
+    alt: "Judge's gavel on a sound block",
   },
 ];
 
@@ -457,8 +463,12 @@ export const PEOPLE: {
     title: "Managing Partner",
     slug: "samuel-boadi-adarkwah",
     email: "s.adarkwah@sbalegalconsult.com",
-    alumniOf: ["Cornell Law School", "Kwame Nkrumah University of Science and Technology"],
-    memberOf: ["Ghana Bar Association", "Ashanti Bar Association"],
+    alumniOf: ["Cornell Law School", "Ghana School of Law", "Kwame Nkrumah University of Science and Technology"],
+    memberOf: [
+      "Ghana Bar Association",
+      "Ashanti Bar Association",
+      "Chartered Institute of Restructuring and Insolvency Practitioners, Ghana",
+    ],
     image: "/portraits/samuel_boadi_adarkwah.webp",
     excerpt:
       "Barrister & Solicitor of the Supreme Court of Ghana with over 17 years' experience across commercial litigation, energy, mining, and insolvency.",
@@ -483,6 +493,7 @@ export const PEOPLE: {
     slug: "abigail-appiah",
     email: "abigail.appiah@sbalegalconsult.com",
     alumniOf: ["Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
+    memberOf: ["Ghana Bar Association", "Ashanti Bar Association"],
     image: "/portraits/abigail_appiah.webp",
     excerpt:
       "Disputes practitioner resolving matters for institutions and individuals through litigation and alternative dispute resolution.",
@@ -505,7 +516,8 @@ export const PEOPLE: {
     title: "Associate",
     slug: "ama-saah-dwumah",
     email: "ama.dwumah@sbalegalconsult.com",
-    alumniOf: ["Kwame Nkrumah University of Science and Technology"],
+    alumniOf: ["Ghana School of Law", "The Gambia Law School", "Kwame Nkrumah University of Science and Technology"],
+    memberOf: ["Ghana Bar Association", "Ashanti Bar Association"],
     image: "/portraits/ama_saa_dwuman.webp",
     excerpt:
       "Internationally trained lawyer with cross-jurisdictional experience across Ghana and The Gambia.",
@@ -555,6 +567,7 @@ export const PEOPLE: {
     slug: "abena-frema-kyei-baffour",
     email: "abena.baffour@sbalegalconsult.com",
     alumniOf: ["Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
+    memberOf: ["Ghana Bar Association", "Ashanti Bar Association"],
     image: "/portraits/abena_frema_kyei_baffuor.webp",
     excerpt:
       "Client-focused practitioner advising individuals and institutions on disputes, medical law and corporate transactions.",
