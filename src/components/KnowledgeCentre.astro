@@ -11,7 +11,7 @@ const articles = await getArticles();
     <div>
       <h2
         id="knowledge-heading"
-        class="scroll-reveal font-display text-3xl font-semibold text-[#16233A]"
+        class="scroll-reveal font-display t-h2 text-[#16233A]"
       >
         Knowledge Centre
       </h2>
@@ -20,11 +20,11 @@ const articles = await getArticles();
     <div>
       {/* stagger-grid: each article row cascades in */}
       {articles.length === 0 ? (
-        <p class="scroll-reveal border-y border-[#D9E1F0] py-6 text-slate-600">
+        <p class="scroll-reveal border-y border-[#D3E3EA] py-6 text-slate-600">
           New publications, news and events are on the way — please check back soon.
         </p>
       ) : (
-        <ul class="stagger-grid divide-y divide-[#D9E1F0] border-y border-[#D9E1F0]">
+        <ul class="stagger-grid divide-y divide-[#D3E3EA] border-y border-[#D3E3EA]">
           {
             articles.map((a) => (
               <li>
@@ -34,7 +34,7 @@ const articles = await getArticles();
                     <span class="mx-2 text-slate-300" aria-hidden="true">|</span>
                     <span class="text-slate-500">{formatDate(a.date)}</span>
                   </p>
-                  <span class="mt-1 block text-[15px] font-medium text-[#16233A] group-hover:text-[#0F3D8E]">
+                  <span class="mt-1 block t-card text-[#16233A] group-hover:text-[#07678F]">
                     {a.title}
                   </span>
                 </a>

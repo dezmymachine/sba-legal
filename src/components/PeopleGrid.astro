@@ -3,15 +3,15 @@ import { getPeople } from "../lib/sanity";
 const people = await getPeople();
 ---
 
-<section class="bg-[#F4F6FA]" aria-labelledby="people-heading">
+<section class="bg-white" aria-labelledby="people-heading">
   <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
     <h2
       id="people-heading"
-      class="scroll-reveal font-display text-3xl font-semibold text-[#16233A]"
+      class="scroll-reveal font-display t-h2 text-[#16233A]"
     >
       Our People
     </h2>
-    <p class="scroll-reveal mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
+    <p class="scroll-reveal mt-3 max-w-2xl t-body text-slate-600">
       Led by our Managing Partner, our lawyers combine courtroom experience,
       transactional skill, and academic depth.
     </p>
@@ -32,11 +32,11 @@ const people = await getPeople();
               />
             </div>
             <div class="pt-4 text-left">
-              <p class="text-sm font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">
+              <p class="text-sm font-semibold text-[#16233A] group-hover:text-[#07678F]">
                 {p.name}
               </p>
               <p class="mt-0.5 text-xs text-slate-500">{p.title}</p>
-              <p class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[#0F3D8E]">
+              <p class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[#07678F]">
                 <span>View profile</span>
                 <svg
                   viewBox="0 0 24 24"
@@ -60,7 +60,7 @@ const people = await getPeople();
     <div class="mt-8 flex justify-end">
       <a
         href="/people"
-        class="inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E] transition-colors hover:text-[#0A2A63]"
+        class="inline-flex items-center gap-1 text-sm font-semibold text-[#07678F] transition-colors hover:text-[#054A68]"
       >
         <span>Meet the team</span>
         <svg

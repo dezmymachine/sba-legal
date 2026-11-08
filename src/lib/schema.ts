@@ -65,6 +65,7 @@ export function personLd(person: (typeof PEOPLE)[number], site: URL): Node {
     name: person.name,
     jobTitle: person.title,
     url: abs(`/people/${person.slug}/`, site),
+    ...(person.email && { email: person.email }),
     image: abs(person.image, site),
     worksFor: { "@id": firmId(site) },
     ...(person.focus && { knowsAbout: person.focus }),

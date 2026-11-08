@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
+import ServiceList from "../components/ServiceList.astro";
 import LearnMore from "../components/LearnMore.astro";
-import { PEOPLE, SERVICES } from "../data/content";
+import { PEOPLE } from "../data/content";
 
 const managingPartner = PEOPLE.find((p) => p.title === "Managing Partner");
 
@@ -17,48 +18,46 @@ const managingPartner = PEOPLE.find((p) => p.title === "Managing Partner");
   />
 
   <section class="bg-white" aria-labelledby="firm-heading">
-    <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:py-20">
-      <div class="scroll-reveal">
-        <h2 id="firm-heading" class="sr-only">The firm</h2>
-        <p class="text-lg leading-relaxed text-[#16233A]">
-          SBA Legal Consult is a law firm based in Kumasi, Ghana. We advise local
-          and international clients on matters where law, business and
-          regulation meet. Our practice covers corporate and commercial law,
-          mining, oil and gas, insolvency and restructuring, medical law, foreign
-          direct investment, immigration and nationality, property law, and
-          litigation and ADR.
+    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
+      <p class="scroll-reveal t-eyebrow text-[#07678F]">Our story</p>
+      <h2 id="firm-heading" class="sr-only">The firm</h2>
+      <div class="mt-6 grid gap-8 border-t border-[#D3E3EA] pt-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12">
+        <p class="scroll-reveal t-lead text-[#16233A]">
+          Our practice covers corporate and commercial law, mining, oil and gas,
+          insolvency and restructuring, medical law, foreign direct investment,
+          immigration and nationality, property law, and litigation and ADR.
         </p>
-        <p class="mt-4 text-base leading-relaxed text-slate-600">
-          Our clients include investors entering Ghana, established local
-          businesses, companies in financial difficulty, healthcare practitioners
-          and institutions, and individuals dealing with land, residence or
-          citizenship. We take the time to understand each client’s objectives
-          and the industry they operate in. We then give advice that is clear,
-          practical and ready to act on.
-        </p>
-        <p class="mt-4 text-base leading-relaxed text-slate-600">
-          We also follow legal, economic and regulatory developments in Ghana and
-          abroad. Our clients can rely on advice that reflects the current law
-          and anticipates the changes that may affect them.
-        </p>
+        <div class="scroll-reveal space-y-4">
+          <p class="t-body text-slate-600">
+            Our clients include investors entering Ghana, established local
+            businesses, companies in financial difficulty, healthcare practitioners
+            and institutions, and individuals dealing with land, residence or
+            citizenship. We take the time to understand each client’s objectives
+            and the industry they operate in. We then give advice that is clear,
+            practical and ready to act on.
+          </p>
+          <p class="t-body text-slate-600">
+            We also follow legal, economic and regulatory developments in Ghana and
+            abroad. Our clients can rely on advice that reflects the current law
+            and anticipates the changes that may affect them.
+          </p>
+        </div>
       </div>
 
       {managingPartner && (
-        <aside class="scroll-reveal border border-[#D9E1F0] bg-[#F4F6FA] p-6" aria-labelledby="leadership-heading">
-          <h2 id="leadership-heading" class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">
-            Leadership
-          </h2>
-          <div class="mt-4 flex gap-4">
+        <div class="scroll-reveal mt-12 grid gap-6 border-t border-[#D3E3EA] pt-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12">
+          <h2 id="leadership-heading" class="font-display t-h3 text-[#16233A]">Leadership</h2>
+          <div class="flex gap-5">
             <img
               src={managingPartner.image}
               width="900"
               height="1200"
               alt={`Portrait of ${managingPartner.name}`}
               loading="lazy"
-              class="aspect-[3/4] w-24 shrink-0 object-cover"
+              class="aspect-[3/4] w-28 shrink-0 object-cover sm:w-32"
             />
             <div>
-              <p class="text-sm leading-relaxed text-slate-600">
+              <p class="t-body text-slate-600">
                 The firm is led by its Managing Partner, Dr. Samuel Boadi
                 Adarkwah. He holds a Doctor of the Science of Law (J.S.D.) from
                 Cornell Law School, Ithaca, New York, USA.
@@ -68,48 +67,56 @@ const managingPartner = PEOPLE.find((p) => p.title === "Managing Partner");
               </div>
             </div>
           </div>
-        </aside>
+        </div>
       )}
     </div>
   </section>
 
-  <section class="bg-[#F4F6FA]" aria-labelledby="expertise-heading">
-    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
-      <h2 id="expertise-heading" class="scroll-reveal font-display text-3xl font-semibold text-[#16233A]">
+  <section class="bg-white" aria-labelledby="expertise-heading">
+    <div class="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:pb-20">
+      <h2 id="expertise-heading" class="scroll-reveal font-display t-h2 text-[#16233A]">
         Our Expertise
       </h2>
-      <!-- stagger-grid: GSAP cascades each expertise card in sequentially -->
-      <ul class="stagger-grid mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map((e) => (
-          <li>
-            <a href={`/expertise/${e.slug}`} class="group block h-full border border-[#D9E1F0] bg-white p-6 transition-colors hover:border-[#0F3D8E]">
-              <h3 class="text-base font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">{e.title}</h3>
-              <p class="mt-2 text-sm leading-relaxed text-slate-600">{e.description}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div class="mt-8"><ServiceList /></div>
     </div>
   </section>
 
   <section class="bg-white" aria-label="More about us">
-    <div class="mx-auto grid max-w-7xl gap-6 px-4 py-14 sm:px-6 md:grid-cols-2 lg:py-20">
-      <a href="/people" class="scroll-reveal group block border border-[#D9E1F0] p-8 transition-colors hover:border-[#0F3D8E]">
-        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">Our People</p>
-        <p class="mt-3 text-base leading-relaxed text-slate-600">
-          Meet the lawyers who bring courtroom experience, transactional skill and
-          academic depth to every matter.
-        </p>
-        <p class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E]">Meet the team</p>
-      </a>
-      <a href="/join-us" class="scroll-reveal group block border border-[#D9E1F0] p-8 transition-colors hover:border-[#0F3D8E]">
-        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">Join Us</p>
-        <p class="mt-3 text-base leading-relaxed text-slate-600">
-          We welcome applications from interns, pupils, associates and staff who
-          share our commitment to integrity and excellence.
-        </p>
-        <p class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E]">Apply to join</p>
-      </a>
+    <div class="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:pb-20">
+      <ul class="grid gap-6 md:grid-cols-2">
+        <li class="scroll-reveal">
+          <a href="/people" class="about-tile group relative block aspect-[4/3] overflow-hidden rounded-lg border border-[#054A68] bg-[#054A68] text-white sm:aspect-square lg:aspect-[4/3]">
+            <span class="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-md bg-white text-[#054A68] transition duration-300 group-hover:rotate-180 group-hover:bg-[#054A68] group-hover:text-white" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M7 17 17 7M8 7h9v9" /></svg>
+            </span>
+            <span class="absolute inset-0 flex flex-col justify-between p-8 sm:p-10">
+              <span class="about-tile-desc max-w-sm pr-14 t-body text-white/85 opacity-100 transition-opacity duration-300">Meet the lawyers who bring courtroom experience, transactional skill and academic depth to every matter.</span>
+              <span class="font-display t-h2 !font-normal">Our People<span class="sr-only"> — Meet the team</span></span>
+            </span>
+          </a>
+        </li>
+        <li class="scroll-reveal">
+          <a href="/join-us" class="about-tile group relative block aspect-[4/3] overflow-hidden rounded-lg border border-[#054A68] bg-[#054A68] text-white sm:aspect-square lg:aspect-[4/3]">
+            <span class="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-md bg-white text-[#054A68] transition duration-300 group-hover:rotate-180 group-hover:bg-[#054A68] group-hover:text-white" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M7 17 17 7M8 7h9v9" /></svg>
+            </span>
+            <span class="absolute inset-0 flex flex-col justify-between p-8 sm:p-10">
+              <span class="about-tile-desc max-w-sm pr-14 t-body text-white/85 opacity-100 transition-opacity duration-300">We welcome applications from interns, pupils, associates and staff who share our commitment to integrity and excellence.</span>
+              <span class="font-display t-h2 !font-normal">Join Us<span class="sr-only"> — Apply to join</span></span>
+            </span>
+          </a>
+        </li>
+      </ul>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  /* Hover (mouse only): tile flips to a light face with the description; touch devices always show it. */
+  .about-tile { transition: background-color 0.3s ease, color 0.3s ease; }
+  @media (hover: hover) and (pointer: fine) {
+    .about-tile-desc { opacity: 0; }
+    .about-tile:hover, .about-tile:focus-visible { background-color: #ffffff; color: #054A68; border-color: #07678F; }
+    .about-tile:hover .about-tile-desc, .about-tile:focus-visible .about-tile-desc { opacity: 1; color: #16233A; }
+  }
+</style>

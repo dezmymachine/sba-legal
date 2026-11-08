@@ -10,18 +10,18 @@ import { SERVICES } from "../data/content";
 >
   <section class="bg-white" aria-labelledby="notfound-heading">
     <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
-      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#0F3D8E]">404</p>
-      <h1 id="notfound-heading" class="font-display mt-3 text-4xl font-medium text-[#16233A] sm:text-5xl">
+      <p class="t-eyebrow text-[#07678F]">404</p>
+      <h1 id="notfound-heading" class="font-display mt-3 t-h1 text-[#16233A]">
         Page not found
       </h1>
-      <p class="mt-4 max-w-xl text-base leading-relaxed text-slate-600">
+      <p class="mt-4 max-w-xl t-body text-slate-600">
         The page may have moved or no longer exists. Try one of our practice areas
         below, or contact our chambers directly.
       </p>
       <ul class="mt-10 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
         {SERVICES.map((s) => (
           <li>
-            <a href={`/expertise/${s.slug}`} class="text-sm font-medium text-[#16233A] hover:text-[#0F3D8E]">{s.title}</a>
+            <a href={`/expertise/${s.slug}`} class="text-sm font-medium text-[#16233A] hover:text-[#07678F]">{s.title}</a>
           </li>
         ))}
       </ul>

@@ -39,10 +39,10 @@ const counts = Object.fromEntries(kinds.map((k) => [k, itemsByKind[k].length]));
               aria-controls={`panel-${kind}`}
               aria-selected={i === 0 ? "true" : "false"}
               data-tab={kind}
-              class={`font-display pb-1 text-lg transition-colors ${
+              class={`font-display pb-1 t-body transition-colors ${
                 i === 0
                   ? "font-semibold text-[#16233A] underline underline-offset-8"
-                  : "font-normal text-slate-600 hover:text-[#0F3D8E]"
+                  : "font-normal text-slate-600 hover:text-[#07678F]"
               }`}
             >
               {KIND_LABELS[kind].plural}
@@ -68,7 +68,7 @@ const counts = Object.fromEntries(kinds.map((k) => [k, itemsByKind[k].length]));
               {itemsByKind[kind].map((a) => (
                 <a
                   href={`/knowledge/${a.slug}`}
-                  class="group block border-b border-[#D9E1F0] py-5"
+                  class="group block border-b border-[#D3E3EA] py-5"
                   aria-label={`Read: ${a.title}`}
                 >
                   <p class="text-xs">
@@ -76,7 +76,7 @@ const counts = Object.fromEntries(kinds.map((k) => [k, itemsByKind[k].length]));
                     <span class="mx-2 text-slate-300" aria-hidden="true">|</span>
                     <span class="text-slate-500">{formatDate(a.date)}</span>
                   </p>
-                  <h3 class="mt-2 text-[15px] font-medium leading-snug text-[#16233A] group-hover:text-[#0F3D8E]">
+                  <h3 class="mt-2 t-card text-[#16233A] group-hover:text-[#07678F]">
                     {a.title}
                   </h3>
                 </a>

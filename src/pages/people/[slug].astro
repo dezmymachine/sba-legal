@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { PEOPLE, serviceForFocus } from "../../data/content";
+import { PEOPLE, SITE, serviceForFocus } from "../../data/content";
 import { breadcrumbLd, personLd } from "../../lib/schema";
 
 // Static detail pages backed by local content.
@@ -49,7 +49,7 @@ const heroImage = "/backgrounds/62.webp";
       <div>
         <a
           href="/people"
-          class="inline-flex items-center gap-1 text-sm font-semibold text-[#0F3D8E] hover:text-[#0A2A63]"
+          class="inline-flex items-center gap-1 text-sm font-semibold text-[#07678F] hover:text-[#054A68]"
         >
           <svg
             viewBox="0 0 24 24"
@@ -65,14 +65,14 @@ const heroImage = "/backgrounds/62.webp";
           </svg>
           <span>Our People</span>
         </a>
-        <p class="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#0F3D8E]">
+        <p class="mt-6 t-eyebrow text-[#07678F]">
           {person.title}
         </p>
-        <h1 class="font-display mt-3 max-w-2xl text-4xl font-medium leading-tight text-[#16233A] sm:text-5xl">
+        <h1 class="font-display mt-3 max-w-2xl t-h1 text-[#16233A]">
           {person.name}
         </h1>
         {person.excerpt && (
-          <p class="mt-4 max-w-xl text-base leading-relaxed text-slate-600">
+          <p class="mt-4 max-w-xl t-body text-slate-600">
             {person.excerpt}
           </p>
         )}
@@ -94,42 +94,62 @@ const heroImage = "/backgrounds/62.webp";
 
   <section class="bg-white" aria-label={`Profile of ${person.name}`}>
     <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
-      <div class="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <div>
-          <div class="space-y-5">
-            {person.bio?.map((para: string) => (
-              <p class="text-base leading-relaxed text-slate-600">{para}</p>
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-16">
+        <div class="scroll-reveal">
+          <h2 class="t-eyebrow text-[#07678F]">Profile</h2>
+          <div class="mt-6 max-w-2xl space-y-6 border-t border-[#D3E3EA] pt-8">
+            {person.bio?.map((para: string, i: number) => (
+              <p class={i === 0 ? "t-lead text-[#16233A]" : "t-body text-slate-600"}>{para}</p>
             ))}
           </div>
         </div>
 
-        <aside>
+        <div class="divide-y divide-[#D3E3EA] border-t border-[#D3E3EA] lg:border-t-0">
           {person.focus && person.focus.length > 0 && (
-            <div class="border border-[#D9E1F0] bg-[#F4F6FA] p-6">
-              <h2 class="text-xs font-semibold uppercase tracking-[0.18em] text-[#0F3D8E]">
-                Focus areas
-              </h2>
-              <ul class="mt-3 flex flex-wrap gap-2">
+            <section class="scroll-reveal py-8 first:pt-0 lg:pt-0" aria-labelledby="expertise-h">
+              <h2 id="expertise-h" class="t-eyebrow text-[#07678F]">Areas of expertise</h2>
+              <ul class="mt-4 grid gap-3">
                 {person.focus.map((f: string) => {
                   const service = serviceForFocus(f);
                   return (
-                    <li class="border border-[#D9E1F0] bg-white text-xs font-medium text-[#16233A]">
+                    <li class="flex gap-3 t-body">
+                      <svg viewBox="0 0 24 24" class="mt-1.5 h-4 w-4 shrink-0 text-[#07678F]" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" /></svg>
                       {service ? (
-                        <a href={`/expertise/${service.slug}`} class="block px-3 py-1.5 hover:text-[#0F3D8E]">{f}</a>
+                        <a href={`/expertise/${service.slug}`} class="font-medium text-[#16233A] hover:text-[#07678F]">{f}</a>
                       ) : (
-                        <span class="block px-3 py-1.5">{f}</span>
+                        <span class="font-medium text-[#16233A]">{f}</span>
                       )}
                     </li>
                   );
                 })}
               </ul>
-            </div>
+            </section>
           )}
-        </aside>
+          {person.alumniOf && person.alumniOf.length > 0 && (
+            <section class="scroll-reveal py-8" aria-labelledby="education-h">
+              <h2 id="education-h" class="t-eyebrow text-[#07678F]">Education and training</h2>
+              <ul class="mt-4 grid gap-3 t-body text-slate-600">
+                {person.alumniOf.map((a: string) => <li>{a}</li>)}
+              </ul>
+            </section>
+          )}
+          {person.memberOf && person.memberOf.length > 0 && (
+            <section class="scroll-reveal py-8" aria-labelledby="memberships-h">
+              <h2 id="memberships-h" class="t-eyebrow text-[#07678F]">Memberships</h2>
+              <ul class="mt-4 grid gap-3 t-body text-slate-600">
+                {person.memberOf.map((m: string) => <li>{m}</li>)}
+              </ul>
+            </section>
+          )}
+          <section class="scroll-reveal py-8" aria-labelledby="contact-h">
+            <h2 id="contact-h" class="t-eyebrow text-[#07678F]">Contact</h2>
+            <a href={`mailto:${person.email ?? SITE.email}`} class="mt-4 inline-block break-words font-display t-h3 text-[#16233A] hover:text-[#07678F]">{person.email ?? SITE.email}</a>
+          </section>
+        </div>
       </div>
 
-      <div class="mt-16 border-t border-[#D9E1F0] pt-10">
-        <h2 class="font-display text-2xl font-semibold text-[#16233A]">
+      <div class="mt-16 border-t border-[#D3E3EA] pt-10">
+        <h2 class="font-display t-h2 text-[#16233A]">
           More of our team
         </h2>
         <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -146,7 +166,7 @@ const heroImage = "/backgrounds/62.webp";
                 />
               </div>
               <div class="pt-3 text-left">
-                <p class="text-sm font-semibold text-[#16233A] group-hover:text-[#0F3D8E]">
+                <p class="text-sm font-semibold text-[#16233A] group-hover:text-[#07678F]">
                   {p.name}
                 </p>
                 <p class="text-xs text-slate-500">{p.title}</p>

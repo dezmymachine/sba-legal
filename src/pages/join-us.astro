@@ -10,7 +10,7 @@ const POSITIONS = ["Intern", "Pupil", "Associate", "Staff"];
 const MAX_CV_MB = 5;
 
 const fieldClass =
-  "mt-2 block w-full border border-[#D9E1F0] bg-white px-4 py-3 text-sm text-[#16233A] placeholder:text-slate-400 focus:border-[#0F3D8E] focus:outline-none focus:ring-1 focus:ring-[#0F3D8E]";
+  "mt-2 block w-full border border-[#D3E3EA] bg-white px-4 py-3 text-sm text-[#16233A] placeholder:text-slate-400 focus:border-[#07678F] focus:outline-none focus:ring-1 focus:ring-[#07678F]";
 ---
 <BaseLayout
   title="Join Us | SBA Legal Consult"
@@ -24,29 +24,29 @@ const fieldClass =
   <section class="bg-white" aria-labelledby="apply-heading">
     <div class="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:py-20">
       <div class="scroll-reveal">
-        <h2 id="apply-heading" class="font-display text-3xl font-semibold text-[#16233A]">
+        <h2 id="apply-heading" class="font-display t-h2 text-[#16233A]">
           Build your career with us
         </h2>
-        <p class="mt-4 text-base leading-relaxed text-slate-600">
+        <p class="mt-4 t-body text-slate-600">
           We welcome applications from interns, pupils, associates and staff who
           share our commitment to integrity, excellence and putting clients
           first.
         </p>
-        <p class="mt-4 text-base leading-relaxed text-slate-600">
+        <p class="mt-4 t-body text-slate-600">
           Complete the form with your details and attach your CV. Applications
           go directly to our chambers, and we will be in touch if there is a
           suitable opening.
         </p>
         <p class="mt-6 text-sm text-slate-600">
           You can also email your application to{" "}
-          <a href={`mailto:${SITE.email}`} class="font-semibold text-[#0F3D8E] hover:text-[#0A2A63]">{SITE.email}</a>.
+          <a href={`mailto:${SITE.email}`} class="font-semibold text-[#07678F] hover:text-[#054A68]">{SITE.email}</a>.
         </p>
       </div>
 
       <div class="scroll-reveal">
         <div
           id="apply-success"
-          class="hidden border border-[#0F3D8E] bg-[#F4F6FA] p-6"
+          class="hidden rounded-lg border border-[#07678F] p-6"
           role="status"
         >
           <p class="text-base font-semibold text-[#16233A]">Thank you — your application has been sent.</p>
@@ -58,7 +58,7 @@ const fieldClass =
           action={formAction}
           method="POST"
           enctype="multipart/form-data"
-          class="grid gap-6 border border-[#D9E1F0] bg-[#F4F6FA] p-6 sm:p-8"
+          class="grid gap-6 rounded-lg border border-[#D3E3EA] p-6 sm:p-8"
         >
           <input type="hidden" name="_subject" value="New Join Us application — SBA Legal Consult" />
           <input type="hidden" name="_template" value="table" />
@@ -93,7 +93,7 @@ const fieldClass =
               required
               accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               aria-describedby="apply-cv-hint"
-              class={`${fieldClass} file:mr-4 file:border-0 file:bg-[#0F3D8E] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white`}
+              class={`${fieldClass} file:mr-4 file:border-0 file:bg-[#07678F] file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white`}
             />
             <p id="apply-cv-hint" class="mt-2 text-xs text-slate-500">PDF or Word document, up to {MAX_CV_MB}MB.</p>
           </div>
@@ -101,7 +101,7 @@ const fieldClass =
           <div>
             <button
               type="submit"
-              class="inline-flex items-center gap-2 bg-[#0F3D8E] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0A2A63] disabled:opacity-60"
+              class="inline-flex items-center gap-2 bg-[#07678F] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#054A68] disabled:opacity-60"
             >
               Submit application
             </button>

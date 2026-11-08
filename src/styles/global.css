@@ -1,15 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #0f3d8e;
-  --color-brand-deep: #0a2a63;
+  --color-brand: #07678F;
+  --color-brand-deep: #054A68;
   --color-brand-ink: #16233a;
   --color-brand-body: #3a4454;
-  --color-brand-paper: #f4f6fa;
-  --color-brand-line: #d9e1f0;
+  --color-brand-paper: #FFFFFF;
+  --color-brand-line: #D3E3EA;
   --font-sans: "Google Sans Flex", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Google Sans Flex", ui-sans-serif, system-ui, sans-serif;
 }
+
+
+/* ── Type scale ───────────────────────────────────────────────────────────────
+   One scale for the whole site; clamp() scales smoothly between 360px and
+   1280px viewports so mobile and desktop stay proportional.                    */
+@utility t-display { font-size: clamp(2.25rem, 1.55rem + 3vw, 3.75rem); line-height: 1.1; font-weight: 600; }
+@utility t-h1 { font-size: clamp(2rem, 1.5rem + 2.2vw, 3rem); line-height: 1.15; font-weight: 500; }
+@utility t-h2 { font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem); line-height: 1.25; font-weight: 600; }
+@utility t-h3 { font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem); line-height: 1.35; font-weight: 600; }
+@utility t-card { font-size: 1rem; line-height: 1.4; font-weight: 500; }
+@utility t-lead { font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem); line-height: 1.7; }
+@utility t-body { font-size: 1rem; line-height: 1.7; }
+@utility t-small { font-size: 0.875rem; line-height: 1.6; }
+@utility t-eyebrow { font-size: 0.75rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
 
 html {
   scroll-behavior: smooth;
@@ -33,11 +47,27 @@ body {
   font-family: var(--font-display);
 }
 
-/* Square corners site-wide */
-*,
-*::before,
-*::after {
-  border-radius: 0 !important;
+/* Subtle rounding site-wide. Full-bleed layers (absolute-positioned images,
+   sections, header, footer) stay square. */
+:root { --radius: 0.5rem; }
+img:not([class*="absolute"]),
+iframe,
+input,
+select,
+textarea,
+button,
+.card-hover {
+  border-radius: var(--radius);
+}
+
+/* Opt-out for the square-corner rule (class specificity beats the * selector) */
+.round {
+  border-radius: 9999px !important;
+}
+
+/* Footer card uses the same radius as the rest of the site */
+.round-card {
+  border-radius: var(--radius) !important;
 }
 
 /* ── Scroll reveal ────────────────────────────────────────────────────────────
@@ -69,7 +99,7 @@ body {
 @media (hover: hover) and (pointer: fine) {
   .card-hover:hover {
     transform: scale(1.03);
-    box-shadow: 0 12px 32px rgba(15, 61, 142, 0.12);
+    box-shadow: 0 12px 32px rgba(7, 103, 143, 0.12);
   }
 }
 

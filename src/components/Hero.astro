@@ -5,7 +5,7 @@ import LearnMore from "./LearnMore.astro";
 
 <section
   id="hero-section"
-  class="relative isolate overflow-hidden bg-[#0A2A63]"
+  class="relative isolate overflow-hidden bg-[#054A68]"
   aria-label="Introduction"
 >
   <!-- Background slideshow — parallax target -->
@@ -23,7 +23,7 @@ import LearnMore from "./LearnMore.astro";
         />
       ))
     }
-    <div class="absolute inset-0 bg-[#0A2A63]/70"></div>
+    <div class="absolute inset-0 bg-black/55"></div>
   </div>
 
   <!-- Hero content — entrance-animated by GSAP on load -->
@@ -31,16 +31,12 @@ import LearnMore from "./LearnMore.astro";
     class="mx-auto flex min-h-[78vh] max-w-7xl flex-col justify-center px-4 py-24 sm:px-6"
   >
     <div id="hero-headline">
-      {/* The H1 names the firm and what/where it is; the slogan is display copy. */}
-      <h1 class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
-        {SITE.heroEyebrow}
-      </h1>
-      <p
-        class="font-display mt-4 max-w-3xl text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
+      <h1
+        class="font-display max-w-3xl t-display text-white"
       >
         {SITE.heroHeading.map((line, i) => <>{i > 0 && " "}<span class="block">{line}</span></>)}
-      </p>
-      <p class="mt-6 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
+      </h1>
+      <p class="mt-6 max-w-2xl t-lead text-white/85">
         {SITE.heroIntro}
       </p>
     </div>

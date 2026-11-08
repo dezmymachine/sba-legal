@@ -49,7 +49,7 @@ export const SERVICES: {
   title: string;
   slug: string;
   description: string;
-  /** Matched against each person's `focus` to list who advises on this service. */
+  /** Matched against a person's `focus` label to link that label to this service page. */
   keywords: string[];
   /** Longer page copy for /expertise/<slug> — add once the firm has approved it. */
   body?: string[];
@@ -133,16 +133,12 @@ export const SERVICES: {
   },
 ];
 
-// Homepage order: corporate first, then the extractive sector, property, immigration.
-const FEATURED_ORDER = ["corporate-commercial", "mining-oil-gas", "property-law", "immigration-nationality"];
-export const PRACTICES = FEATURED_ORDER.map((slug) => SERVICES.find((s) => s.slug === slug)!);
+// Homepage shows four featured services, in the same order as /expertise (SERVICES order).
+const FEATURED = ["corporate-commercial", "mining-oil-gas", "property-law", "immigration-nationality"];
+export const PRACTICES = SERVICES.filter((s) => FEATURED.includes(s.slug));
 
 const matches = (keywords: string[], label: string) =>
   keywords.some((k) => label.toLowerCase().includes(k.toLowerCase()));
-
-/** People whose focus areas match a service. */
-export const peopleForService = (service: (typeof SERVICES)[number]) =>
-  PEOPLE.filter((p) => p.focus?.some((f) => matches(service.keywords, f)));
 
 /** The service page a focus-area label belongs to, if any. */
 export const serviceForFocus = (label: string) => SERVICES.find((s) => matches(s.keywords, label));
@@ -448,6 +444,7 @@ export const PEOPLE: {
   name: string;
   title: string;
   slug: string;
+  email?: string;
   alumniOf: string[];
   memberOf?: string[];
   image: string;
@@ -459,6 +456,7 @@ export const PEOPLE: {
     name: "Dr Samuel Boadi Adarkwah",
     title: "Managing Partner",
     slug: "samuel-boadi-adarkwah",
+    email: "s.adarkwah@sbalegalconsult.com",
     alumniOf: ["Cornell Law School", "Kwame Nkrumah University of Science and Technology"],
     memberOf: ["Ghana Bar Association", "Ashanti Bar Association"],
     image: "/portraits/samuel_boadi_adarkwah.webp",
@@ -483,6 +481,7 @@ export const PEOPLE: {
     name: "Abigail Appiah",
     title: "Associate",
     slug: "abigail-appiah",
+    email: "abigail.appiah@sbalegalconsult.com",
     alumniOf: ["Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
     image: "/portraits/abigail_appiah.webp",
     excerpt:
@@ -505,6 +504,7 @@ export const PEOPLE: {
     name: "Ama Saah Dwumah",
     title: "Associate",
     slug: "ama-saah-dwumah",
+    email: "ama.dwumah@sbalegalconsult.com",
     alumniOf: ["Kwame Nkrumah University of Science and Technology"],
     image: "/portraits/ama_saa_dwuman.webp",
     excerpt:
@@ -515,16 +515,18 @@ export const PEOPLE: {
       "Corporate and Commercial Advisory",
     ],
     bio: [
-      "Ama Saah Dwumah is a driven and internationally trained legal professional with academic and practical experience spanning Ghana and The Gambia. Her legal foundation is built on a strong academic background and cross-jurisdictional training, positioning her to offer nuanced and adaptable legal insight.",
-      "Ama obtained her Bachelor of Laws (LLB) degree from the Kwame Nkrumah University of Science and Technology (KNUST) in Kumasi, Ghana. She subsequently pursued her professional legal training (BL) in The Gambia, qualifying in a distinct common law jurisdiction outside Ghana. She has been duly called to the Bar in The Gambia and is entitled to appear before the lower courts. In addition, Ama has completed her professional legal training (BL) in Ghana and is currently awaiting call to the Ghana Bar. Her dual exposure to both jurisdictions enhances her understanding of comparative legal systems, procedural frameworks, and cross-border legal dynamics.",
-      "Her areas of interest include dispute resolution, civil litigation, and corporate and commercial advisory. She is committed to delivering diligent legal support grounded in research, integrity, and a strong appreciation of jurisdictional differences within the West African legal landscape.",
-      "Ama is passionate about professional excellence and continuous development, and she brings a disciplined, client-focused approach to every legal matter she undertakes.",
+      "Ama Saah Dwumah is an internationally trained legal professional with academic and practical experience spanning Ghana and The Gambia. Her strong academic grounding and cross-jurisdictional training allow her to offer nuanced, adaptable legal insight.",
+      "Ama holds a Bachelor of Laws (LLB) from the Kwame Nkrumah University of Science and Technology (KNUST) in Kumasi, Ghana. She then completed her professional legal training (BL) in The Gambia, a separate common law jurisdiction, where she was called to the Bar in 2024 and is entitled to appear before its courts.",
+      "She also completed her professional legal training in Ghana and was enrolled as a Barrister and Solicitor of the Supreme Court of Ghana in March 2026. Her exposure to both jurisdictions deepens her understanding of comparative legal systems, procedural frameworks, and cross-border legal dynamics.",
+      "Her areas of interest include dispute resolution, civil litigation, and corporate and commercial advisory. She is committed to delivering diligent legal support grounded in research and integrity, with a strong appreciation of jurisdictional differences across the West African legal landscape.",
+      "Ama is passionate about professional excellence and continuous development, and she brings a disciplined, client-focused approach to every matter she handles.",
     ],
   },
   {
     name: "Ezekiel Osei",
     title: "Associate",
     slug: "ezekiel-osei",
+    email: "ezekielosei@sbalegalconsult.com",
     alumniOf: ["University of Cambridge", "Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
     memberOf: ["Ghana Bar Association", "Young International Arbitration Group"],
     image: "/portraits/ezekiel_osei.webp",
@@ -551,6 +553,7 @@ export const PEOPLE: {
     name: "Abena Frema Kyei-Baffour",
     title: "Associate",
     slug: "abena-frema-kyei-baffour",
+    email: "abena.baffour@sbalegalconsult.com",
     alumniOf: ["Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
     image: "/portraits/abena_frema_kyei_baffuor.webp",
     excerpt:
@@ -572,7 +575,6 @@ export const PEOPLE: {
 
 export const SITE = {
   name: "SBA Legal Consult",
-  heroEyebrow: "SBA Legal Consult — Law firm in Kumasi, Ghana",
   heroHeading: ["Sound law.", "Practical solutions."],
   heroIntro:
     "At SBA Legal Consult, we aim to turn sound legal principle into practical solutions that move our clients’ case forward.",

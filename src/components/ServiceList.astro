@@ -1,0 +1,22 @@
+---
+import { SERVICES } from "../data/content";
+---
+<ol class="border-t border-[#D3E3EA]">
+  {SERVICES.map((s, i) => (
+    <li
+      id={s.slug}
+      class="scroll-reveal grid scroll-mt-24 gap-3 border-b border-[#D3E3EA] py-8 md:grid-cols-[4rem_minmax(0,2fr)_minmax(0,3fr)] md:gap-8"
+    >
+      <span class="text-sm font-semibold text-[#07678F]" aria-hidden="true">
+        {String(i + 1).padStart(2, "0")}
+      </span>
+      <h3 class="font-display t-h3 text-[#16233A]">
+        <a href={`/expertise/${s.slug}`} class="hover:text-[#07678F]">{s.title}</a>
+      </h3>
+      <div>
+        <p class="t-body text-slate-600">{s.description}</p>
+        <a href={`/expertise/${s.slug}`} class="mt-2 inline-block text-sm font-semibold text-[#07678F] hover:text-[#054A68]" aria-label={`More about ${s.title}`}>Learn more</a>
+      </div>
+    </li>
+  ))}
+</ol>
