@@ -8,7 +8,7 @@ export default defineConfig({
   name: 'default',
   title: 'SBA Legal Consult',
 
-  projectId: '9yq6wer6',
+  projectId: '3dt82du8',
   dataset: 'production',
 
   plugins: [structureTool(), visionTool(), table()],
