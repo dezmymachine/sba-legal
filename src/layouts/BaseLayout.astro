@@ -92,8 +92,12 @@ const graph = {
     </noscript>
   </head>
   <body class="bg-white text-slate-700">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-[#16233A] focus:px-4 focus:py-2 focus:text-white"
+    >Skip to main content</a>
     <Navbar />
-    <main><slot /></main>
+    <main id="main" tabindex="-1"><slot /></main>
     <Footer />
     <WhatsAppButton />
 

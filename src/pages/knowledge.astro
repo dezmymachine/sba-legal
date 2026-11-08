@@ -76,9 +76,9 @@ const counts = Object.fromEntries(kinds.map((k) => [k, itemsByKind[k].length]));
                     <span class="mx-2 text-slate-300" aria-hidden="true">|</span>
                     <span class="text-slate-500">{formatDate(a.date)}</span>
                   </p>
-                  <h3 class="mt-2 t-card text-[#16233A] group-hover:text-[#07678F]">
+                  <h2 class="mt-2 t-card text-[#16233A] group-hover:text-[#07678F]">
                     {a.title}
-                  </h3>
+                  </h2>
                 </a>
               ))}
             </div>
@@ -86,7 +86,7 @@ const counts = Object.fromEntries(kinds.map((k) => [k, itemsByKind[k].length]));
         </div>
       ))}
 
-      <p class="mt-10 text-xs text-slate-400" data-tab-counts={JSON.stringify(counts)}>
+      <p class="mt-10 text-xs text-slate-500" data-tab-counts={JSON.stringify(counts)}>
         {counts.publication} publications · {counts.news} news · {counts.event} events
       </p>
     </div>

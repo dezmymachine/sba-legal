@@ -18,7 +18,7 @@ const firmLinks = NAV_ITEMS.flatMap((item) =>
     <div class="round-card flex flex-col bg-[#FDFDFA] px-6 py-10 sm:px-10 sm:py-12 lg:px-12">
       <div class="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-[1fr_1.4fr_1.6fr]">
         <nav aria-label="Firm">
-          <p class="t-body text-slate-400">Firm</p>
+          <p class="t-body text-slate-500">Firm</p>
           <ul class="mt-3 grid gap-2">
             {firmLinks.map((l) => (
               <li><a href={l.href} class="t-body font-medium text-[#16233A] hover:text-[#07678F]">{l.label}</a></li>
@@ -26,7 +26,7 @@ const firmLinks = NAV_ITEMS.flatMap((item) =>
           </ul>
         </nav>
         <nav aria-label="Expertise">
-          <p class="t-body text-slate-400">Expertise</p>
+          <p class="t-body text-slate-500">Expertise</p>
           <ul class="mt-3 grid gap-2">
             {SERVICES.map((s) => (
               <li><a href={`/expertise/${s.slug}`} class="t-body font-medium text-[#16233A] hover:text-[#07678F]">{s.title}</a></li>
@@ -34,7 +34,7 @@ const firmLinks = NAV_ITEMS.flatMap((item) =>
           </ul>
         </nav>
         <div class="col-span-2 lg:col-span-1">
-          <p class="t-body text-slate-400">Contact</p>
+          <p class="t-body text-slate-500">Contact</p>
           <ul class="mt-3 grid gap-2 t-body font-medium text-[#16233A]">
             <li>{SITE.address}</li>
             <li>{SITE.poBox}</li>
@@ -54,7 +54,7 @@ const firmLinks = NAV_ITEMS.flatMap((item) =>
           {/* Only real profiles (SITE.socials) are shown; hidden until the firm confirms them. */}
           {SITE.socials.length > 0 && (
             <>
-              <p class="mt-8 t-body text-slate-400">Follow Us</p>
+              <p class="mt-8 t-body text-slate-500">Follow Us</p>
               <div class="mt-3 flex gap-4">
                 {SITE.socials.map((s) => (
                   <a href={s.href} aria-label={s.label} rel="me noopener" target="_blank" class="text-[#16233A] hover:text-[#07678F]">

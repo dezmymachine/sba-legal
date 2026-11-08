@@ -3,6 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import { PAGE_HERO_IMAGES, SITE } from "../data/content";
 
+const fieldClass =
+  "mt-2 block w-full border border-[#D3E3EA] bg-white px-4 py-3 text-sm text-[#16233A] placeholder:text-slate-500 focus:border-[#07678F] focus:outline-none focus:ring-1 focus:ring-[#07678F]";
+
 const DETAILS = [
   { label: "Email", value: SITE.email, href: `mailto:${SITE.email}` },
   { label: "Telephone", value: SITE.phone1, href: `tel:+233${SITE.phone1.substring(1)}` },
@@ -22,24 +25,70 @@ const DETAILS = [
   />
 
   <section class="bg-white" aria-labelledby="contact-heading">
-    <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-20">
-      <h2 id="contact-heading" class="scroll-reveal font-display t-h2 text-[#16233A]">
-        Get in touch
-      </h2>
-      <p class="scroll-reveal mt-3 max-w-2xl t-body text-slate-600">
-        For all enquiries, email our chambers or call the office. We will respond
-        as promptly as possible.
-      </p>
-      <dl class="stagger-grid mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {DETAILS.map((d) => (
-          <div class="rounded-lg border border-[#D3E3EA] p-6">
-            <dt class="t-eyebrow text-[#07678F]">{d.label}</dt>
-            <dd class="mt-3 text-sm leading-relaxed text-[#16233A] break-words">
-              {d.href ? <a href={d.href} class="font-semibold hover:text-[#07678F]">{d.value}</a> : d.value}
-            </dd>
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:py-20">
+      <div>
+        <h2 id="contact-heading" class="scroll-reveal font-display t-h2 text-[#16233A]">
+          Get in touch
+        </h2>
+        <p class="scroll-reveal mt-3 max-w-md t-body text-slate-600">
+          For all enquiries, email our chambers or call the office. We will respond
+          as promptly as possible.
+        </p>
+        <dl class="mt-10 divide-y divide-[#D3E3EA]">
+          {DETAILS.map((d) => (
+            <div class="py-4 first:pt-0">
+              <dt class="t-eyebrow text-[#07678F]">{d.label}</dt>
+              <dd class="mt-1 text-[#16233A] break-words">
+                {d.href ? <a href={d.href} class="font-semibold hover:text-[#07678F]">{d.value}</a> : d.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div>
+        <h2 id="enquiry-heading" class="scroll-reveal font-display t-h2 text-[#16233A]">
+          Send us an enquiry
+        </h2>
+        {/* Shell only: not connected to a backend yet. Wire `action`/handler later. */}
+        <form id="contact-form" class="mt-6 grid gap-6" aria-labelledby="enquiry-heading">
+          <div>
+            <label for="contact-name" class="text-sm font-semibold text-[#16233A]">Name</label>
+            <input id="contact-name" name="name" type="text" required autocomplete="name" placeholder="Your full name" class={fieldClass} />
           </div>
-        ))}
-      </dl>
+          <div>
+            <label for="contact-email" class="text-sm font-semibold text-[#16233A]">Email address</label>
+            <input id="contact-email" name="email" type="email" inputmode="email" required autocomplete="email" spellcheck="false" placeholder="name@example.com" class={fieldClass} />
+          </div>
+          <div>
+            <label for="contact-message" class="text-sm font-semibold text-[#16233A]">Your enquiry</label>
+            <textarea id="contact-message" name="message" rows="6" required placeholder="How can we help?" class={fieldClass}></textarea>
+          </div>
+          <div>
+            <button
+              type="submit"
+              class="inline-flex items-center gap-2 bg-[#07678F] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#054A68]"
+            >
+              Send enquiry
+            </button>
+            <p id="contact-status" role="status" class="mt-4 hidden text-sm text-slate-600"></p>
+          </div>
+        </form>
+      </div>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("contact-status");
+  // Placeholder until the form is wired to a backend.
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (status) {
+      status.textContent =
+        "This form is not connected yet. Please email chambers@sbalegalconsult.com or call the office.";
+      status.classList.remove("hidden");
+    }
+  });
+</script>
