@@ -16,7 +16,7 @@
 - Only content is `inspo/` (hand sketches + reference screenshots) plus scaffold. No test/lint/CI, no domain yet; staging first.
 
 ## Project intent — verified 2026-09-15
-- Firm: SBA LEGAL CONSULT, est. 2025, Kumasi, Ghana — 2nd Floor, JP Station Building, Off J.K. Acheampong Ave, Ahinsan Estate. Phones: 0543557244; 0322291474. Email: chambers@sbalegalconsult.com.
+- Firm: SBA LEGAL CONSULT, est. 2025, Kumasi, Ghana — 2nd Floor, JP Station, Ahinsan Estate (letterhead 2026-11-08; P.O. Box UP 824 Kumasi; GPS AO-K189-9869; map listing "SBA LEGAL CONSULT PRUC", all in `SITE`). Phones: 0543557244; 0322291474. Email: chambers@sbalegalconsult.com.
 - Positioning: "A full-service law firm serving individuals and businesses across Ghana." Values: Integrity, excellence, client-first. Goal: credibility first, then leads + recruitment.
 - Reference model is https://bentsienchill.com/; hand sketches (`inspo/page1.jpeg`, `page2.jpeg`) win on structure over screenshots.
 - Planned IA: Home, About Us, Expertise, People, Knowledge, Join Us, Contact + Practice-detail and Bio-detail templates.

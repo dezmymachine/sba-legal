@@ -23,13 +23,13 @@ export function firmLd(site: URL): Node {
     telephone: [SITE.phone1, SITE.phone2].map((p) => `+233${p.substring(1)}`),
     address: {
       "@type": "PostalAddress",
-      streetAddress: "2nd Floor, JP Station Building, Off J.K. Acheampong Ave, Ahinsan Estate",
+      streetAddress: "2nd Floor, JP Station, Ahinsan Estate",
+      postOfficeBoxNumber: "UP 824",
       addressLocality: "Kumasi",
       addressRegion: "Ashanti",
       addressCountry: "GH",
     },
-    // Approximate (Ahinsan Estate). Replace with the Google Business Profile pin.
-    geo: { "@type": "GeoCoordinates", latitude: 6.6885, longitude: -1.6244 },
+    geo: { "@type": "GeoCoordinates", ...SITE.geo },
     areaServed: { "@type": "Country", name: "Ghana" },
     foundingDate: "2025",
     ...(managingPartner && { founder: { "@id": personId(managingPartner.slug, site) } }),

@@ -324,7 +324,7 @@ export const ARTICLES = [
         children: [
           {
             _type: "span",
-            text: "SBA Legal Consult has opened its doors at the 2nd Floor, JP Station Building, Off J.K. Acheampong Ave, Ahinsan Estate, Kumasi. The firm offers full-service counsel to individuals and businesses, with particular depth in commercial litigation, energy and natural resources, insolvency and restructuring, property, and medical law.",
+            text: "SBA Legal Consult has opened its doors at the 2nd Floor, JP Station, Ahinsan Estate, Kumasi. The firm offers full-service counsel to individuals and businesses, with particular depth in commercial litigation, energy and natural resources, insolvency and restructuring, property, and medical law.",
           },
         ],
       },
@@ -584,5 +584,11 @@ export const SITE = {
   phone1: "0543557244",
   phone2: "0322291474",
   address:
-    "2nd Floor, JP Station Building, Off J.K. Acheampong Ave, Ahinsan Estate, Kumasi, Ashanti",
+    "2nd Floor, JP Station, Ahinsan Estate, Kumasi, Ashanti",
+  poBox: "P.O. Box UP 824, Kumasi",
+  // Ghana Post Digital Address
+  gps: "AO-K189-9869",
+  // Google Maps listing: "SBA LEGAL CONSULT PRUC" (plus code MCC5+9M3)
+  geo: { latitude: 6.67088, longitude: -1.59083 },
+  mapEmbed: "https://www.google.com/maps?q=MCC5+9M3+SBA+LEGAL+CONSULT+PRUC,+Kumasi&output=embed",
 };

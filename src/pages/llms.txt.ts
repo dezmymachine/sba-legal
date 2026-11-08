@@ -14,7 +14,7 @@ export const GET: APIRoute = async ({ site }) => {
     "",
     "> A law firm based in Kumasi, Ghana, advising local and international clients on matters where law, business and regulation meet. Founded 2025.",
     "",
-    `- Address: ${SITE.address}, Ghana`,
+    `- Address: ${SITE.address}, Ghana; ${SITE.poBox}; GPS ${SITE.gps}`,
     `- Telephone: +233 ${SITE.phone1.substring(1)}; +233 ${SITE.phone2.substring(1)}`,
     `- Email: ${SITE.email}`,
     `- Contact page: ${url("/contact/")}`,
