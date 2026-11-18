@@ -538,7 +538,7 @@ export const PEOPLE: {
     name: "Ezekiel Osei",
     title: "Associate",
     slug: "ezekiel-osei",
-    email: "ezekielosei@sbalegalconsult.com",
+    email: "ezekiel.osei@sbalegalconsult.com",
     alumniOf: ["University of Cambridge", "Kwame Nkrumah University of Science and Technology", "Ghana School of Law"],
     memberOf: ["Ghana Bar Association", "Young International Arbitration Group"],
     image: "/portraits/ezekiel_osei.webp",
